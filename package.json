@@ -1,0 +1,19 @@
+{
+  "name": "thuya-core",
+  "version": "1.0.0",
+  "description": "Thuya Core",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Geri101/thuya-core.git"
+  },
+  "author": "Gergely Simándi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Geri101/thuya-core/issues"
+  },
+  "homepage": "https://github.com/Geri101/thuya-core#readme",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}
