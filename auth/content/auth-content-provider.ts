@@ -1,5 +1,5 @@
-import { ContentDefinition } from "@thuya/framework/content-management/domain/entity/content-definition";
-import ContentProvider from "@thuya/framework/content-provider";
+import { ContentDefinition } from "@thuya/framework/dist/content-management/domain/entity/content-definition";
+import ContentProvider from "@thuya/framework/dist/content-provider";
 import userContentDefinition from "./user-content-definition";
 
 class AuthContentProvider extends ContentProvider {

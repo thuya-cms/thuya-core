@@ -1,4 +1,4 @@
-import IdentifiableError from "../../../framework/identitfiable-error";
+import IdentifiableError from "@thuya/framework/dist/identitfiable-error";
 import Email from "../value-object/email";
 import Password from "../value-object/password";
 

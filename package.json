@@ -1,8 +1,13 @@
 {
-  "name": "thuya-core",
-  "version": "1.0.0",
-  "description": "Thuya Core",
-  "scripts": {},
+  "name": "@thuya/core",
+  "version": "1.0.1",
+  "description": "Thuya CMS - Core features",
+  "files": ["dist/**/*"],
+  "scripts": {
+    "prepare" : "npm run build",
+    "build": "npx tsc",
+    "publish": "npm publish"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Geri101/thuya-core.git"
@@ -18,7 +23,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@thuya/framework": "^1.0.0",
+    "@thuya/framework": "^1.0.2",
     "bcrypt": "^5.1.0"
   }
 }

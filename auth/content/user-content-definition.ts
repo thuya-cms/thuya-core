@@ -1,6 +1,6 @@
 import User from "./user";
-import { ContentFieldDefinition, ContentFieldType } from '@thuya/framework/content-management/domain/entity/content-field-definition';
-import { ContentDefinition } from '@thuya/framework/content-management/domain/entity/content-definition';
+import { ContentFieldDefinition, ContentFieldType } from '@thuya/framework/dist/content-management/domain/entity/content-field-definition';
+import { ContentDefinition } from '@thuya/framework/dist/content-management/domain/entity/content-definition';
 
 class UserContentDefinition extends ContentDefinition<User> {
     constructor() {

@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import IdentifiableError from '../../../framework/identitfiable-error';
+import IdentifiableError from '@thuya/framework/dist/identitfiable-error';
 
 enum ErrorCode {
     Invalid = "invalid"
