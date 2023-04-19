@@ -8,7 +8,9 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "npx tsc",
-    "publish": "npm publish"
+    "publish": "npm publish",
+    "prepatch": "npm version prepatch",
+    "patch": "npm version patch"
   },
   "repository": {
     "type": "git",
