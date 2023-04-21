@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import logger from "@thuya/framework/dist/util/logger";
 import login from "../domain/usecase/login";
 import Email from "../domain/value-object/email";
 import Password from "../domain/value-object/password";
@@ -17,6 +18,7 @@ class ExpressAuthHandler {
         }
 
         catch (error: any) {
+            logger.error(error.message);
             response.sendStatus(401);
         }
     }

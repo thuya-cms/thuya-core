@@ -14,8 +14,10 @@ enum ErrorCode {
 class Login {
     execute(email: Email, password: Password): string {
         try {
-            // TODO: Support reading content using field conditions. Make it generic.
-            let userContent = contentManager.readContent(email.value(), userContentDefinition.getName());
+            let userContent = contentManager.readContentByFieldValue(userContentDefinition.getName(), {
+                name: "email",
+                value: email.value()
+            });
 			const isPasswordMatching = password.compare(userContent.password);
 
 			if (!isPasswordMatching) {
