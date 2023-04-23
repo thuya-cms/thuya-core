@@ -5,7 +5,7 @@ class EmailFieldDefinition extends ContentFieldDefinition {
     constructor() {
         super("", "user-email", ContentFieldType.Text);
 
-        this.addHandler(this.validateFormat);
+        this.addValidator(this.validateFormat);
     }
 
 

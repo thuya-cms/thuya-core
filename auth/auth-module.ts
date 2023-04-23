@@ -7,6 +7,7 @@ import expressAuthHandler from './app/express-auth-handler';
 class AuthModule extends Module {
     setupMiddlewares(expressApp: express.Application): void {
         expressApp.post("/login", expressAuthHandler.login);
+        expressApp.post("/register", expressAuthHandler.register);
     }
     
     getContentProviders(): ContentProvider[] {

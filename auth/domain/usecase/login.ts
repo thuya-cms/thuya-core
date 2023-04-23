@@ -12,13 +12,14 @@ enum ErrorCode {
 }
 
 class Login {
-    execute(email: Email, password: Password): string {
+    execute(email: Email, password: string): string {
         try {
             let userContent = contentManager.readContentByFieldValue(userContentDefinition.getName(), {
                 name: "email",
                 value: email.value()
             });
-			const isPasswordMatching = password.compare(userContent.password);
+            let storedPassword = new Password(userContent.password, true);
+			const isPasswordMatching = storedPassword.compare(password);
 
 			if (!isPasswordMatching) {
                 logger.error("Invalid login attempt.");

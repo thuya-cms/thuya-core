@@ -3,14 +3,29 @@ import logger from "@thuya/framework/dist/util/logger";
 import login from "../domain/usecase/login";
 import Email from "../domain/value-object/email";
 import Password from "../domain/value-object/password";
+import register from "../domain/usecase/register";
 
 class ExpressAuthHandler {
     login(request: Request, response: Response, next: NextFunction) {
         try {
             let email = new Email(request.body.email);
-            let password = new Password(request.body.password);
+            let token = login.execute(email, request.body.password);
 
-            let token = login.execute(email, password);
+            response.json({
+                token: token
+            }).status(200);
+        }
+
+        catch (error: any) {
+            logger.error(error.message);
+            response.sendStatus(401);
+        }
+    }
+
+    register(request: Request, response: Response, next: NextFunction) {
+        try {
+            let email = new Email(request.body.email);
+            let token = register.execute(email, request.body.password);
 
             response.json({
                 token: token
