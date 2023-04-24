@@ -7,8 +7,8 @@ class UserContentDefinition extends ContentDefinition<User> {
     constructor() {
         super("", "user");
 
-        this.addContentField(emailFieldDefinition);
-        this.addContentField(passwordFieldDefinition);
+        this.addContentField("email", emailFieldDefinition, { isRequired: true });
+        this.addContentField("password", passwordFieldDefinition, { isRequired: true });
     }
 }
 
