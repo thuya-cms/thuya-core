@@ -1,4 +1,4 @@
-import { ContentFieldDefinition, ContentFieldType, ContentFieldTypes } from "@thuya/framework/dist/content-management/domain/entity/content-field-definition";
+import { ContentFieldDefinition, ContentFieldType, ContentFieldValue } from "@thuya/framework";
 import Password from "../domain/value-object/password";
 
 class PasswordFieldDefinition extends ContentFieldDefinition {
@@ -11,11 +11,11 @@ class PasswordFieldDefinition extends ContentFieldDefinition {
 
 
     
-    private validateFormat(contentFieldData: ContentFieldTypes) {
+    private validateFormat(contentFieldData: ContentFieldValue) {
         new Password(contentFieldData.toString());
     }
     
-    private hashPassword(contentFieldData: ContentFieldTypes) {
+    private hashPassword(contentFieldData: ContentFieldValue) {
         let password = new Password(contentFieldData.toString());
         return password.value();
     }

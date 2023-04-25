@@ -1,4 +1,4 @@
-import { ContentFieldDefinition, ContentFieldType, ContentFieldTypes } from "@thuya/framework/dist/content-management/domain/entity/content-field-definition";
+import { ContentFieldDefinition, ContentFieldType, ContentFieldValue } from "@thuya/framework";
 import Email from "../domain/value-object/email";
 
 class EmailFieldDefinition extends ContentFieldDefinition {
@@ -10,7 +10,7 @@ class EmailFieldDefinition extends ContentFieldDefinition {
 
 
     
-    private validateFormat(contentFieldData: ContentFieldTypes) {
+    private validateFormat(contentFieldData: ContentFieldValue) {
         new Email(contentFieldData.toString());
     }
 }

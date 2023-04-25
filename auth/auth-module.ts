@@ -1,6 +1,5 @@
 import express from 'express';
-import ContentProvider from '@thuya/framework/dist/content-provider';
-import Module from '@thuya/framework/dist/module';
+import { ContentProvider, Module } from '@thuya/framework';
 import authContentProvider from './content/auth-content-provider';
 import expressAuthHandler from './app/express-auth-handler';
 

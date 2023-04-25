@@ -1,5 +1,5 @@
 import User from "./user";
-import { ContentDefinition } from '@thuya/framework/dist/content-management/domain/entity/content-definition';
+import { ContentDefinition } from '@thuya/framework';
 import emailFieldDefinition from "./email-field-definition";
 import passwordFieldDefinition from "./password-field-definition";
 
