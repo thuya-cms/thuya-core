@@ -1,9 +1,9 @@
-import { ContentFieldDefinition, ContentFieldType, ContentFieldValue } from "@thuya/framework";
+import { TextContentFieldDefinition, ContentFieldValue } from "@thuya/framework";
 import Password from "../domain/value-object/password";
 
-class PasswordFieldDefinition extends ContentFieldDefinition {
+class PasswordFieldDefinition extends TextContentFieldDefinition {
     constructor() {
-        super("", "user-password", ContentFieldType.Text);
+        super("", "user-password");
 
         this.addValidator(this.validateFormat);
         this.addDetermination(this.hashPassword)

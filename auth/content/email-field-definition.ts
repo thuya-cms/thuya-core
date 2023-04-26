@@ -1,9 +1,9 @@
-import { ContentFieldDefinition, ContentFieldType, ContentFieldValue } from "@thuya/framework";
+import { TextContentFieldDefinition, ContentFieldValue } from "@thuya/framework";
 import Email from "../domain/value-object/email";
 
-class EmailFieldDefinition extends ContentFieldDefinition {
+class EmailFieldDefinition extends TextContentFieldDefinition {
     constructor() {
-        super("", "user-email", ContentFieldType.Text);
+        super("", "user-email");
 
         this.addValidator(this.validateFormat);
     }

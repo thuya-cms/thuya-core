@@ -2,7 +2,7 @@ import User from "../../content/user";
 import userContentDefinition from "../../content/user-content-definition";
 import factory from "../factory";
 import Email from "../value-object/email";
-import contentManager from "@thuya/framework/dist/content-management/app/content-manager";
+import { contentManager } from "@thuya/framework";
 
 class Register {
     execute(email: Email, password: string): string {
