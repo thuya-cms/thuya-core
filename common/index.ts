@@ -1,0 +1,1 @@
+export { default as dateIntervalContentFieldDefinition, ErrorCode as DateIntervalContentFieldDefinitionErrorCode } from "./content/date-interval-content-field-definition";
