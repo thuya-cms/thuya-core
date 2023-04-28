@@ -1,7 +1,8 @@
 import express from 'express';
-import { ContentProvider, Module } from '@thuya/framework';
+import { ContentProvider, IController, Module } from '@thuya/framework';
 import authContentProvider from './content/auth-content-provider';
 import expressAuthHandler from './app/express-auth-handler';
+import { authGuardController } from './controller';
 
 class AuthModule extends Module {
     setupMiddlewares(expressApp: express.Application): void {
@@ -11,6 +12,10 @@ class AuthModule extends Module {
     
     getContentProviders(): ContentProvider[] {
         return [authContentProvider];
+    }
+
+    getControllers(): IController[] {
+        return [authGuardController];
     }
 }
 

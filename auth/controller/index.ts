@@ -1,0 +1,1 @@
+export { default as authGuardController } from "./auth-guard.controller";
