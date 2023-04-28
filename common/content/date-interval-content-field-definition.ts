@@ -1,5 +1,4 @@
 import { DateContentFieldDefinition, GroupContentFieldDefinition, IdentifiableError, contentHelper, logger } from "@thuya/framework";
-import moment from "moment";
 
 enum ErrorCode {
     MissingDate = "missing-date",
