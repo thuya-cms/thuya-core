@@ -15,7 +15,9 @@ class AuthModule extends Module {
     }
 
     getControllers(): IController[] {
-        return [authGuardController];
+        return [
+            authGuardController
+        ];
     }
 }
 
