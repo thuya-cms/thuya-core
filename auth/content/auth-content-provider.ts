@@ -16,6 +16,20 @@ class AuthContentProvider extends ContentProvider {
             roles: ["admin"]
         };
         contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
+
+        authRestriction = {
+            contentDefinitionName: userContentDefinition.getName(),
+            operations: ["POST", "GET", "PATCH", "DELETE"],
+            roles: ["admin"]
+        };
+        contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
+
+        authRestriction = {
+            contentDefinitionName: authRestrictionContentDefinition.getName(),
+            operations: ["POST", "GET", "PATCH", "DELETE"],
+            roles: ["admin"]
+        };
+        contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
     }
 }
 
