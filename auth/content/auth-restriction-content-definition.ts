@@ -15,6 +15,9 @@ class AuthRestrictionContentDefinition extends ContentDefinition<AuthRestriction
             "operations", 
             new ArrayContentFieldDefinition("", "operations", operationContentField),
             { isRequired: true });
+
+        let roleContentField = new TextContentFieldDefinition("", "role");
+        this.addContentField("roles", new ArrayContentFieldDefinition("", "roles", roleContentField));
     }
 }
 

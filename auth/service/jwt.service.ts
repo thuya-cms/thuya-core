@@ -7,9 +7,10 @@ class JwtService implements IJwtService {
 
 
 
-    createToken(user: User): string {
+    createToken(user: { email: string, roles: string[] }): string {
         const payload: UserJwtPayload = {
-            email: user.email
+            email: user.email,
+            roles: user.roles
         };
 
         return jwt.sign(payload, this.hashString);
@@ -19,7 +20,8 @@ class JwtService implements IJwtService {
         const payload = jwt.verify(token, this.hashString) as JwtPayload;
     
         return {
-            email: payload["email"]
+            email: payload["email"],
+            roles: payload["roles"]
         };
     }
 }

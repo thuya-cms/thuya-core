@@ -5,6 +5,8 @@ import Password from "../value-object/password";
 import contentManager from "@thuya/framework/dist/content-management/app/content-manager";
 import IdentifiableError from "@thuya/framework/dist/identifiable-error";
 import factory from "../factory";
+import roleContentDefinition from "../../content/role-content-definition";
+import Role from "../../content/role";
 
 enum ErrorCode {
     InvalidLoginCredentials = "invalid-login",
@@ -14,10 +16,24 @@ enum ErrorCode {
 class Login {
     execute(email: Email, password: string): string {
         try {
+            let roles: string[];
             let userContent = contentManager.readContentByFieldValue(userContentDefinition.getName(), {
                 name: "email",
                 value: email.value()
             });
+
+            try {
+                let roleContent: Role = contentManager.readContentByFieldValue(roleContentDefinition.getName(), {
+                    name: "email",
+                    value: email.value()
+                });
+                roles = roleContent.roles;
+            }
+
+            catch (error: any) {
+                roles = [];
+            }
+
             let storedPassword = new Password(userContent.password, true);
 			const isPasswordMatching = storedPassword.compare(password);
 
@@ -27,7 +43,10 @@ class Login {
 			}
 
             const jwtService = factory.getJwtService();
-			const token = jwtService.createToken(userContent);
+			const token = jwtService.createToken({
+                email: email.value(),
+                roles: roles
+            });
 
 			return token;
 		}

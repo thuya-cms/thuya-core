@@ -1,11 +1,12 @@
 import User from "../../content/user";
 
 type UserJwtPayload = {
-    email: string
+    email: string,
+    roles: string[]
 };
 
 interface IJwtService {
-    createToken(user: User): string;
+    createToken(user: { email: string, roles: string[] }): string;
     verifyToken(token: string): UserJwtPayload;
 }
 

@@ -13,7 +13,10 @@ class Register {
         };
         contentManager.createContent(userContentDefinition.getName(), user); // Expects a not hashed password.
 
-        return factory.getJwtService().createToken(user);
+        return factory.getJwtService().createToken({
+            email: email.value(),
+            roles: []
+        });
     }
 }
 
