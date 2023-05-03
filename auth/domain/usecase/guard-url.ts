@@ -7,7 +7,7 @@ class GuardUrl {
     execute(token: string, contentName: string, operation: string) {
         try {
             let authRestriction: AuthRestriction;
-            let superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
+            const superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
 
             const readAuthRestrictionResult = contentManager.readContentByFieldValue(
                 authRestrictionContentDefinition.getName(),
@@ -30,7 +30,7 @@ class GuardUrl {
                 return;
             }
 
-            let payload = factory.getJwtService().verifyToken(token);
+            const payload = factory.getJwtService().verifyToken(token);
 
             if (superadminEmail && superadminEmail === payload.email) {
                 logger.debug("Superadmin access.");
@@ -38,12 +38,13 @@ class GuardUrl {
             }
 
             if (authRestriction.roles && authRestriction.roles.length > 0) {
-                let hasRole: boolean = true;
-                authRestriction.roles.forEach(requiredRole => {
+                let hasRole = false;
+                for (let requiredRole of authRestriction.roles) {
                     if (payload.roles.includes(requiredRole)) {
                         hasRole = true;
+                        break;
                     }
-                });
+                }
 
                 if (!hasRole) {
                     throw new Error("Not authorized to access url.");

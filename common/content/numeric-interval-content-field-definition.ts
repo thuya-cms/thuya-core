@@ -10,7 +10,7 @@ class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition 
     constructor() {
         super("", "numeric-interval");
 
-        let numberContentFieldDefinition = new NumericContentFieldDefinition("", "number");
+        const numberContentFieldDefinition = new NumericContentFieldDefinition("", "number");
 
         this.addContentField("from", numberContentFieldDefinition, { isRequired: true });
         this.addContentField("to", numberContentFieldDefinition, { isRequired: true });

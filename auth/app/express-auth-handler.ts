@@ -7,8 +7,8 @@ import register from "../domain/usecase/register";
 class ExpressAuthHandler {
     login(request: Request, response: Response, next: NextFunction) {
         try {
-            let email = new Email(request.body.email);
-            let token = login.execute(email, request.body.password);
+            const email = new Email(request.body.email);
+            const token = login.execute(email, request.body.password);
 
             response.json({
                 token: token
@@ -23,8 +23,8 @@ class ExpressAuthHandler {
 
     register(request: Request, response: Response, next: NextFunction) {
         try {
-            let email = new Email(request.body.email);
-            let token = register.execute(email, request.body.password);
+            const email = new Email(request.body.email);
+            const token = register.execute(email, request.body.password);
 
             response.json({
                 token: token

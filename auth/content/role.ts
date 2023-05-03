@@ -1,4 +1,5 @@
 type Role = {
+    email: string,
     roles: string[]
 }
 

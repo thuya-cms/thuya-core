@@ -24,7 +24,7 @@ class PasswordFieldDefinition extends TextContentFieldDefinition {
     }
     
     private hashPassword(contentFieldData: ContentFieldValue) {
-        let password = new Password(contentFieldData.toString());
+        const password = new Password(contentFieldData.toString());
         return password.value();
     }
 }

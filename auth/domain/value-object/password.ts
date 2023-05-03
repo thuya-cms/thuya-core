@@ -17,7 +17,7 @@ class Password {
      * @param isHashed true if the password is already hashed
      * @throws will throw an error when the password format is not correct
      */
-    constructor(password: string, isHashed: boolean = false) {
+    constructor(password: string, isHashed = false) {
         if (!isHashed && !this.isPasswordValid(password))
             throw new IdentifiableError(ErrorCode.Invalid, "Password format is invalid.");
 

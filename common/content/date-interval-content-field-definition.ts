@@ -7,15 +7,15 @@ enum ErrorCode {
 }
 
 class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
-    private startDateFieldName: string = "start-date";
-    private endDateFieldName: string = "end-date";
+    private startDateFieldName = "start-date";
+    private endDateFieldName = "end-date";
     
     
     
     constructor() {
         super("", "date-interval");
 
-        let dateContentFieldDefinition = new DateContentFieldDefinition("", "date");
+        const dateContentFieldDefinition = new DateContentFieldDefinition("", "date");
 
         this.addContentField(this.startDateFieldName, dateContentFieldDefinition, { isRequired: true });
         this.addContentField(this.endDateFieldName, dateContentFieldDefinition, { isRequired: true });

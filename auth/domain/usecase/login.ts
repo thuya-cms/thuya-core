@@ -17,7 +17,7 @@ class Login {
     execute(email: Email, password: string): string {
         try {
             let roles: string[];
-            let readUserContentResult = contentManager.readContentByFieldValue(userContentDefinition.getName(), {
+            const readUserContentResult = contentManager.readContentByFieldValue(userContentDefinition.getName(), {
                 name: "email",
                 value: email.value()
             });
@@ -37,7 +37,7 @@ class Login {
             else 
                 roles = [];
 
-            let storedPassword = new Password(readUserContentResult.getResult().password, true);
+            const storedPassword = new Password(readUserContentResult.getResult().password, true);
 			const isPasswordMatching = storedPassword.compare(password);
 
 			if (!isPasswordMatching) {

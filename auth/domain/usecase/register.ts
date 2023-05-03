@@ -11,7 +11,9 @@ class Register {
             email: email.value(),
             password: password
         };
-        contentManager.createContent(userContentDefinition.getName(), user); // Expects a not hashed password.
+        const createContentResult = contentManager.createContent(userContentDefinition.getName(), user); // Expects a not hashed password.
+        if (createContentResult.getIsFailing())
+            throw new Error(createContentResult.getMessage());
 
         return factory.getJwtService().createToken({
             email: email.value(),

@@ -8,8 +8,10 @@
     "dist/**/*"
   ],
   "scripts": {
-    "prepublish": "npm run build",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "test:coverage": "nyc npm run test",
     "build": "npx tsc",
+    "build:dev": "npx tsc -p tsconfig-dev.json",
     "link": "npm link",
     "link:all": "npm link @thuya/framework"
   },
@@ -32,7 +34,34 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
-    "moment": "^2.29.4",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
-  }
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "check-coverage": true,
+    "all": true,
+    "exclude": [
+        "dist/**/*",
+        "test/**/*"
+    ],
+    "reporter": [
+        "html",
+        "lcov",
+        "text",
+        "text-summary"
+    ],
+    "report-dir": "coverage"
+}
 }
