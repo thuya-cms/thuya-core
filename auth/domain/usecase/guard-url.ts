@@ -9,13 +9,6 @@ class GuardUrl {
             let authRestriction: AuthRestriction;
             let superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
 
-            let payload = factory.getJwtService().verifyToken(token);
-
-            if (superadminEmail && superadminEmail === payload.email) {
-                logger.debug("Superadmin access.");
-                return;
-            }
-
             const readAuthRestrictionResult = contentManager.readContentByFieldValue(
                 authRestrictionContentDefinition.getName(),
                 { name: "contentDefinitionName", value: contentName });
@@ -26,9 +19,21 @@ class GuardUrl {
             }
 
             authRestriction = readAuthRestrictionResult.getResult();
+            logger.debug(
+                `Authorization restriction exists for "%s", operations "%s", roles "%s".`, 
+                authRestriction.contentDefinitionName, 
+                authRestriction.operations, 
+                authRestriction.roles);
 
             if (!readAuthRestrictionResult.getResult().operations.includes(operation)) {
                 logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
+                return;
+            }
+
+            let payload = factory.getJwtService().verifyToken(token);
+
+            if (superadminEmail && superadminEmail === payload.email) {
+                logger.debug("Superadmin access.");
                 return;
             }
 
