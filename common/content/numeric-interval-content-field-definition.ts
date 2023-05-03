@@ -1,4 +1,4 @@
-import { GroupContentFieldDefinition, IdentifiableError, NumericContentFieldDefinition, contentHelper, logger } from "@thuya/framework";
+import { GroupContentFieldDefinition, NumericContentFieldDefinition, Result, contentHelper, logger } from "@thuya/framework";
 
 enum ErrorCode {
     MissingNumber = "missing-number",
@@ -20,13 +20,13 @@ class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition 
 
 
 
-    private validateInterval(fieldValue: any) {
+    private validateInterval(fieldValue: any): Result {
         const startDateFieldName = contentHelper.getContentPropertyName("from", fieldValue);
         const endDateFieldName = contentHelper.getContentPropertyName("to", fieldValue);
 
         if (!startDateFieldName || !endDateFieldName) {
             logger.debug(`From or to value is missing from interval.`);
-            throw new IdentifiableError(ErrorCode.MissingNumber, "From or to value is missing.");
+            return Result.error(`From or to value is missing from interval.`);
         }
 
         const fromString: string = contentHelper.getFieldValue(startDateFieldName.toString(), fieldValue);
@@ -36,8 +36,10 @@ class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition 
 
         if (to < from) {
             logger.debug(`Invalid numeric interval "%s - %s".`, fromString, toString);
-            throw new IdentifiableError(ErrorCode.InvalidInterval, `Invalid numeric interval "${ fromString } - ${ toString }".`);
+            return Result.error(`Invalid numeric interval "${ fromString } - ${ toString }".`);
         }
+
+        return Result.success();
     }
 }
 

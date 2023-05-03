@@ -1,5 +1,24 @@
 import { ArrayContentFieldDefinition, ContentDefinition, TextContentFieldDefinition } from "@thuya/framework";
 import AuthRestriction from "./auth-restriction";
+import rolesContentFieldDefinition from "./roles-content-field-definition";
+
+class ContentDefinitionContentFieldDefinition extends TextContentFieldDefinition {
+    constructor() {
+        super("", "content-definition-name");
+    }
+}
+
+class OperationContentFieldDefinition extends TextContentFieldDefinition {
+    constructor() {
+        super("", "operation");
+    }
+}
+
+class OperationsContentFieldDefinition extends ArrayContentFieldDefinition {
+    constructor() {
+        super("", "operations", new OperationContentFieldDefinition());
+    }
+}
 
 class AuthRestrictionContentDefinition extends ContentDefinition<AuthRestriction> {
     constructor() {
@@ -7,18 +26,16 @@ class AuthRestrictionContentDefinition extends ContentDefinition<AuthRestriction
 
         this.addContentField(
             "content-definition-name", 
-            new TextContentFieldDefinition("", "content-definition-name"),
+            new ContentDefinitionContentFieldDefinition(),
             { isRequired: true });
 
-        let operationContentField = new TextContentFieldDefinition("", "operation");
         this.addContentField(
             "operations", 
-            new ArrayContentFieldDefinition("", "operations", operationContentField),
+            new OperationsContentFieldDefinition(),
             { isRequired: true });
-
-        let roleContentField = new TextContentFieldDefinition("", "role");
-        this.addContentField("roles", new ArrayContentFieldDefinition("", "roles", roleContentField));
+        this.addContentField("roles", rolesContentFieldDefinition);
     }
 }
 
+export { ContentDefinitionContentFieldDefinition, OperationContentFieldDefinition, OperationsContentFieldDefinition };
 export default new AuthRestrictionContentDefinition();

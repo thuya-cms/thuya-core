@@ -1,4 +1,4 @@
-import { DateContentFieldDefinition, GroupContentFieldDefinition, IdentifiableError, contentHelper, logger } from "@thuya/framework";
+import { DateContentFieldDefinition, GroupContentFieldDefinition, Result, contentHelper, logger } from "@thuya/framework";
 
 enum ErrorCode {
     MissingDate = "missing-date",
@@ -25,13 +25,13 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
 
 
 
-    private validateInterval(fieldValue: any) {
+    private validateInterval(fieldValue: any): Result {
         const startDateFieldName = contentHelper.getContentPropertyName("start-date", fieldValue);
         const endDateFieldName = contentHelper.getContentPropertyName("end-date", fieldValue);
 
         if (!startDateFieldName || !endDateFieldName) {
             logger.debug(`Start date or end date is missing from date interval.`);
-            throw new IdentifiableError(ErrorCode.MissingDate, "Start or end date is missing.");
+            return Result.error(`Start date or end date is missing from date interval.`);
         }
 
         const startDateString: string = contentHelper.getFieldValue(startDateFieldName.toString(), fieldValue);
@@ -41,8 +41,10 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
 
         if (endDate < startDate) {
             logger.debug(`Invalid date interval "%s - %s".`, startDateString, endDateString);
-            throw new IdentifiableError(ErrorCode.InvalidInterval, `Invalid date interval "${ startDateString } - ${ endDateString }".`);
+            return Result.error(`Invalid date interval "${ startDateString } - ${ endDateString }".`);
         }
+
+        return Result.success();
     }
 }
 

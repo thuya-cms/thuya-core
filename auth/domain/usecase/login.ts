@@ -17,24 +17,27 @@ class Login {
     execute(email: Email, password: string): string {
         try {
             let roles: string[];
-            let userContent = contentManager.readContentByFieldValue(userContentDefinition.getName(), {
+            let readUserContentResult = contentManager.readContentByFieldValue(userContentDefinition.getName(), {
                 name: "email",
                 value: email.value()
             });
 
-            try {
-                let roleContent: Role = contentManager.readContentByFieldValue(roleContentDefinition.getName(), {
-                    name: "email",
-                    value: email.value()
-                });
-                roles = roleContent.roles;
+            if (readUserContentResult.getIsFailing()) {
+                logger.error("Use does not exist.");
+                throw new Error("Use does not exist.");
             }
 
-            catch (error: any) {
+            const readRoleResult = contentManager.readContentByFieldValue(roleContentDefinition.getName(), {
+                name: "email",
+                value: email.value()
+            });
+
+            if (readRoleResult.getIsSuccessful()) 
+                roles = readRoleResult.getResult().roles;
+            else 
                 roles = [];
-            }
 
-            let storedPassword = new Password(userContent.password, true);
+            let storedPassword = new Password(readUserContentResult.getResult().password, true);
 			const isPasswordMatching = storedPassword.compare(password);
 
 			if (!isPasswordMatching) {

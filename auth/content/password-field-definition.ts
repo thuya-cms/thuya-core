@@ -1,4 +1,4 @@
-import { TextContentFieldDefinition, ContentFieldValue } from "@thuya/framework";
+import { TextContentFieldDefinition, ContentFieldValue, Result } from "@thuya/framework";
 import Password from "../domain/value-object/password";
 
 class PasswordFieldDefinition extends TextContentFieldDefinition {
@@ -11,8 +11,16 @@ class PasswordFieldDefinition extends TextContentFieldDefinition {
 
 
     
-    private validateFormat(contentFieldData: ContentFieldValue) {
-        new Password(contentFieldData.toString());
+    private validateFormat(contentFieldData: ContentFieldValue): Result {
+        try {
+            new Password(contentFieldData.toString());
+
+            return Result.success();
+        }
+
+        catch (error: any) {
+            return Result.error(error.message);
+        }
     }
     
     private hashPassword(contentFieldData: ContentFieldValue) {

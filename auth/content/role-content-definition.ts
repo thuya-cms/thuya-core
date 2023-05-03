@@ -1,6 +1,7 @@
-import { ArrayContentFieldDefinition, ContentDefinition, TextContentFieldDefinition } from "@thuya/framework";
+import { ContentDefinition } from "@thuya/framework";
 import Role from "./role";
 import emailFieldDefinition from "./email-field-definition";
+import rolesContentFieldDefinition from "./roles-content-field-definition";
 
 class RoleContentDefinition extends ContentDefinition<Role> {
     constructor() {
@@ -8,8 +9,7 @@ class RoleContentDefinition extends ContentDefinition<Role> {
 
         this.addContentField("email", emailFieldDefinition, { isRequired: true, isUnique: true });
 
-        let roleContentField = new TextContentFieldDefinition("", "role");
-        this.addContentField("roles", new ArrayContentFieldDefinition("", "roles", roleContentField), { isRequired: true });
+        this.addContentField("roles", rolesContentFieldDefinition, { isRequired: true });
     }
 }
 

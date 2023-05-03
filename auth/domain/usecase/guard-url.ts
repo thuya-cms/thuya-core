@@ -6,7 +6,7 @@ import AuthRestriction from "../../content/auth-restriction";
 class GuardUrl {
     execute(token: string, contentName: string, operation: string) {
         try {
-            let authRestriction: AuthRestriction  | undefined;
+            let authRestriction: AuthRestriction;
             let superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
 
             let payload = factory.getJwtService().verifyToken(token);
@@ -16,16 +16,18 @@ class GuardUrl {
                 return;
             }
 
-            try {
-                authRestriction = contentManager.readContentByFieldValue(
-                    authRestrictionContentDefinition.getName(),
-                    { name: "contentDefinitionName", value: contentName });
+            const readAuthRestrictionResult = contentManager.readContentByFieldValue(
+                authRestrictionContentDefinition.getName(),
+                { name: "contentDefinitionName", value: contentName });
+
+            if (readAuthRestrictionResult.getIsFailing()) {
+                logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
+                return;
             }
 
-            catch (error: any) {
-            }
+            authRestriction = readAuthRestrictionResult.getResult();
 
-            if (!authRestriction || !authRestriction.operations.includes(operation)) {
+            if (!readAuthRestrictionResult.getResult().operations.includes(operation)) {
                 logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
                 return;
             }

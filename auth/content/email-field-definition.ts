@@ -1,4 +1,4 @@
-import { TextContentFieldDefinition, ContentFieldValue } from "@thuya/framework";
+import { TextContentFieldDefinition, ContentFieldValue, Result } from "@thuya/framework";
 import Email from "../domain/value-object/email";
 
 class EmailFieldDefinition extends TextContentFieldDefinition {
@@ -10,8 +10,16 @@ class EmailFieldDefinition extends TextContentFieldDefinition {
 
 
     
-    private validateFormat(contentFieldData: ContentFieldValue) {
-        new Email(contentFieldData.toString());
+    private validateFormat(contentFieldData: ContentFieldValue): Result {
+        try {
+            new Email(contentFieldData.toString());
+
+            return Result.success();
+        }
+
+        catch (error: any) {
+            return Result.error(error.message);
+        }
     }
 }
 
