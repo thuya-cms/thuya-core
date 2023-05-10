@@ -1,4 +1,4 @@
-import { thuyaApp } from "@thuya/framework";
+import { TextContentFieldDefinition, contentDefinitionManager, thuyaApp } from "@thuya/framework";
 import { authModule } from "../../auth";
 import Email from "../../auth/domain/value-object/email";
 import { should } from "chai";
@@ -8,6 +8,7 @@ import localPersistency from "@thuya/framework/dist/content-management/persisten
 
 describe("register tests", () => {
     beforeEach(() => {
+        contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
         thuyaApp.useModule(authModule);
     });
 
@@ -16,9 +17,9 @@ describe("register tests", () => {
     });
 
 
-    it("should fail with invalid password", () => {
+    it("should fail with invalid password", async () => {
         try {
-            register.execute(new Email("test@test.com"), "short");
+            await register.execute(new Email("test@test.com"), "short");
             should().fail();
         }
         
@@ -27,9 +28,9 @@ describe("register tests", () => {
         }
     });
 
-    it("should fail with invalid email", () => {
+    it("should fail with invalid email", async () => {
         try {
-            register.execute(new Email("test.com"), "Password123!");
+            await register.execute(new Email("test.com"), "Password123!");
             should().fail();
         }
         
@@ -38,12 +39,12 @@ describe("register tests", () => {
         }
     });
     
-    it("should fail with existing email", () => {
-        const token = register.execute(new Email("test@test.com"), "Password123!");
+    it("should fail with existing email", async () => {
+        const token = await register.execute(new Email("test@test.com"), "Password123!");
         should().exist(token);
 
         try {
-            register.execute(new Email("test@test.com"), "Password456!");
+            await register.execute(new Email("test@test.com"), "Password456!");
             should().fail();
         }
         

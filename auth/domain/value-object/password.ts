@@ -1,9 +1,4 @@
 import bcrypt from 'bcrypt';
-import IdentifiableError from '@thuya/framework/dist/identitfiable-error';
-
-enum ErrorCode {
-    Invalid = "invalid"
-}
 
 class Password {
     private hashedPassword: string;
@@ -19,7 +14,7 @@ class Password {
      */
     constructor(password: string, isHashed = false) {
         if (!isHashed && !this.isPasswordValid(password))
-            throw new IdentifiableError(ErrorCode.Invalid, "Password format is invalid.");
+            throw new Error("Password format is invalid.");
 
         if (isHashed)
             this.hashedPassword = password;

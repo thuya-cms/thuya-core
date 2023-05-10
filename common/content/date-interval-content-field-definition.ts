@@ -6,6 +6,12 @@ enum ErrorCode {
     InvalidInterval = "invalid-interval"
 }
 
+class SingleDateContentFieldDefinition extends DateContentFieldDefinition {
+    constructor() {
+        super("", "date");
+    }
+}
+
 class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
     private startDateFieldName = "start-date";
     private endDateFieldName = "end-date";
@@ -15,10 +21,8 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
     constructor() {
         super("", "date-interval");
 
-        const dateContentFieldDefinition = new DateContentFieldDefinition("", "date");
-
-        this.addContentField(this.startDateFieldName, dateContentFieldDefinition, { isRequired: true });
-        this.addContentField(this.endDateFieldName, dateContentFieldDefinition, { isRequired: true });
+        this.addContentField(this.startDateFieldName, new SingleDateContentFieldDefinition(), { isRequired: true });
+        this.addContentField(this.endDateFieldName, new SingleDateContentFieldDefinition(), { isRequired: true });
 
         this.addValidator(this.validateInterval);
     }
@@ -49,4 +53,4 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
 }
 
 export default new DateIntervalContentFieldDefinition();
-export { ErrorCode };
+export { ErrorCode, SingleDateContentFieldDefinition };

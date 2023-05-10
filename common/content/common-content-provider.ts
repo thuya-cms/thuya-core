@@ -1,11 +1,17 @@
 import { ContentProvider } from "@thuya/framework";
-import { ContentFieldDefinitionDTO } from "@thuya/framework/dist/content-management/app/dto/content-field-definition/content-field-definition";
-import dateIntervalContentFieldDefinition from "./date-interval-content-field-definition";
-import numericIntervalContentFieldDefinition from "./numeric-interval-content-field-definition";
+import { ContentFieldDefinition } from "@thuya/framework";
+import dateIntervalContentFieldDefinition, { SingleDateContentFieldDefinition } from "./date-interval-content-field-definition";
+import numericIntervalContentFieldDefinition, { SingleNumericContentFieldDefinition } from "./numeric-interval-content-field-definition";
 
 class CommonContentProvider extends ContentProvider {
-    override getContentFieldDefinitions(): ContentFieldDefinitionDTO[] {
-        return [dateIntervalContentFieldDefinition, numericIntervalContentFieldDefinition];
+    override getContentFieldDefinitions(): ContentFieldDefinition[] {
+        return [
+            new SingleDateContentFieldDefinition(),
+            new SingleNumericContentFieldDefinition(),
+
+            dateIntervalContentFieldDefinition, 
+            numericIntervalContentFieldDefinition
+        ];
     }
 }
 

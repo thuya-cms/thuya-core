@@ -1,9 +1,3 @@
-import IdentifiableError from "@thuya/framework/dist/identitfiable-error";
-
-enum ErrorCode {
-    Invalid = "invalid"
-}
-
 class Email {
     /**
      * Email value object.
@@ -13,7 +7,7 @@ class Email {
      */
     constructor(private email: string) {
         if (!this.isEmailValid(email))
-            throw new IdentifiableError(ErrorCode.Invalid, "Email address is invalid.");
+            throw new Error("Email address is invalid.");
     }
 
 
@@ -35,4 +29,3 @@ class Email {
 }
 
 export default Email;
-export { ErrorCode };

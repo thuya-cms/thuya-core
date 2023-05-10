@@ -1,4 +1,4 @@
-import { thuyaApp } from "@thuya/framework";
+import { TextContentFieldDefinition, contentDefinitionManager, thuyaApp } from "@thuya/framework";
 import { authModule } from "../../auth";
 import login from "../../auth/domain/usecase/login";
 import Email from "../../auth/domain/value-object/email";
@@ -9,6 +9,7 @@ import localPersistency from "@thuya/framework/dist/content-management/persisten
 
 describe("login tests", () => {
     beforeEach(() => {
+        contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
         thuyaApp.useModule(authModule);
     });
 
@@ -17,20 +18,21 @@ describe("login tests", () => {
     });
 
 
-    it("should be successful with valid credentials", () => {
-        let token = register.execute(new Email("test@test.com"), "password123!")
+    it("should be successful with valid credentials", async () => {
+        let token = await register.execute(new Email("test@test.com"), "password123!")
         should().exist(token);
         
-        token = login.execute(new Email("test@test.com"), "password123!");
+        token = await login.execute(new Email("test@test.com"), "password123!");
         should().exist(token);
     });
 
-    it("should fail with invalid password", () => {
-        let token = register.execute(new Email("test@test.com"), "password123!")
+    it("should fail with invalid password", async () => {
+        const token = await register.execute(new Email("test@test.com"), "password123!")
         should().exist(token);
         
         try {
-            login.execute(new Email("test@test.com"), "password1234!");
+            await login.execute(new Email("test@test.com"), "password1234!");
+            should().fail();
         }
         
         catch (error: any) {
@@ -38,12 +40,13 @@ describe("login tests", () => {
         }
     });
 
-    it("should fail with invalid email", () => {
-        let token = register.execute(new Email("test@test.com"), "password123!")
+    it("should fail with invalid email", async () => {
+        const token = await register.execute(new Email("test@test.com"), "password123!")
         should().exist(token);
         
         try {
-            login.execute(new Email("test1@test.com"), "password123!");
+            await login.execute(new Email("test1@test.com"), "password123!");
+            should().fail();
         }
         
         catch (error: any) {

@@ -1,15 +1,13 @@
-import { contentManager, expressHelper, logger } from "@thuya/framework";
+import { contentManager, logger } from "@thuya/framework";
 import factory from "../factory";
 import authRestrictionContentDefinition from "../../content/auth-restriction-content-definition";
-import AuthRestriction from "../../content/auth-restriction";
 
 class GuardUrl {
-    execute(token: string, contentName: string, operation: string) {
+    async execute(token: string, contentName: string, operation: string) {
         try {
-            let authRestriction: AuthRestriction;
             const superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
 
-            const readAuthRestrictionResult = contentManager.readContentByFieldValue(
+            const readAuthRestrictionResult = await contentManager.readContentByFieldValue(
                 authRestrictionContentDefinition.getName(),
                 { name: "contentDefinitionName", value: contentName });
 
@@ -18,14 +16,14 @@ class GuardUrl {
                 return;
             }
 
-            authRestriction = readAuthRestrictionResult.getResult();
+            const authRestriction = readAuthRestrictionResult.getResult();
             logger.debug(
                 `Authorization restriction exists for "%s", operations "%s", roles "%s".`, 
                 authRestriction.contentDefinitionName, 
                 authRestriction.operations, 
                 authRestriction.roles);
 
-            if (!readAuthRestrictionResult.getResult().operations.includes(operation)) {
+            if (!authRestriction.operations || !authRestriction.operations.includes(operation)) {
                 logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
                 return;
             }
@@ -39,7 +37,7 @@ class GuardUrl {
 
             if (authRestriction.roles && authRestriction.roles.length > 0) {
                 let hasRole = false;
-                for (let requiredRole of authRestriction.roles) {
+                for (const requiredRole of authRestriction.roles) {
                     if (payload.roles.includes(requiredRole)) {
                         hasRole = true;
                         break;

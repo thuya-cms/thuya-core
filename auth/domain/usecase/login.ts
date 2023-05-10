@@ -1,23 +1,15 @@
-import logger from "@thuya/framework/dist/util/logger";
 import userContentDefinition from "../../content/user-content-definition";
 import Email from "../value-object/email";
 import Password from "../value-object/password";
-import contentManager from "@thuya/framework/dist/content-management/app/content-manager";
-import IdentifiableError from "@thuya/framework/dist/identifiable-error";
+import { contentManager, logger } from "@thuya/framework";
 import factory from "../factory";
 import roleContentDefinition from "../../content/role-content-definition";
-import Role from "../../content/role";
-
-enum ErrorCode {
-    InvalidLoginCredentials = "invalid-login",
-    UnknownError = "unknown-error"
-}
 
 class Login {
-    execute(email: Email, password: string): string {
+    async execute(email: Email, password: string): Promise<string> {
         try {
             let roles: string[];
-            const readUserContentResult = contentManager.readContentByFieldValue(userContentDefinition.getName(), {
+            const readUserContentResult = await contentManager.readContentByFieldValue(userContentDefinition.getName(), {
                 name: "email",
                 value: email.value()
             });
@@ -27,7 +19,7 @@ class Login {
                 throw new Error("Use does not exist.");
             }
 
-            const readRoleResult = contentManager.readContentByFieldValue(roleContentDefinition.getName(), {
+            const readRoleResult = await contentManager.readContentByFieldValue(roleContentDefinition.getName(), {
                 name: "email",
                 value: email.value()
             });
@@ -42,7 +34,7 @@ class Login {
 
 			if (!isPasswordMatching) {
                 logger.error("Invalid login attempt.");
-				throw new IdentifiableError(ErrorCode.InvalidLoginCredentials, "Invalid login credentials.");
+				throw new Error("Invalid login credentials.");
 			}
 
             const jwtService = factory.getJwtService();
@@ -56,7 +48,7 @@ class Login {
 
 		catch(error: any) {
 			logger.error(error.message);
-			throw new IdentifiableError(ErrorCode.UnknownError, "Unknown error during login.");
+			throw new Error("Unknown error during login.");
 		}
     }
 }

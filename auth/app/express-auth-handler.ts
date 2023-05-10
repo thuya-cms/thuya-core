@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { logger } from "@thuya/framework";
 import login from "../domain/usecase/login";
 import Email from "../domain/value-object/email";
 import register from "../domain/usecase/register";
 
 class ExpressAuthHandler {
-    login(request: Request, response: Response, next: NextFunction) {
+    login(request: Request, response: Response) {
         try {
             const email = new Email(request.body.email);
             const token = login.execute(email, request.body.password);
@@ -21,7 +21,7 @@ class ExpressAuthHandler {
         }
     }
 
-    register(request: Request, response: Response, next: NextFunction) {
+    register(request: Request, response: Response) {
         try {
             const email = new Email(request.body.email);
             const token = register.execute(email, request.body.password);

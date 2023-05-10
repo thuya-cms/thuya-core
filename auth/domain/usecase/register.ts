@@ -5,13 +5,13 @@ import Email from "../value-object/email";
 import { contentManager } from "@thuya/framework";
 
 class Register {
-    execute(email: Email, password: string): string {
+    async execute(email: Email, password: string): Promise<string> {
         const user: User = {
             id: "",
             email: email.value(),
             password: password
         };
-        const createContentResult = contentManager.createContent(userContentDefinition.getName(), user); // Expects a not hashed password.
+        const createContentResult = await contentManager.createContent(userContentDefinition.getName(), user); // Expects a not hashed password.
         if (createContentResult.getIsFailing())
             throw new Error(createContentResult.getMessage());
 

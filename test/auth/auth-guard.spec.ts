@@ -1,4 +1,4 @@
-import { contentManager, thuyaApp } from "@thuya/framework";
+import { TextContentFieldDefinition, contentDefinitionManager, contentManager, thuyaApp } from "@thuya/framework";
 import { authModule, roleContentDefinition } from "../../auth";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
 import guardUrl from "../../auth/domain/usecase/guard-url";
@@ -12,6 +12,7 @@ import login from "../../auth/domain/usecase/login";
 
 describe("authorization guard", () => {
     beforeEach(() => {
+        contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
         thuyaApp.useModule(authModule);
     });
 
@@ -20,29 +21,29 @@ describe("authorization guard", () => {
     });
 
 
-    it("should be successful unauthenticated without restriction", () => {
-        guardUrl.execute("", "test-content", "POST");
+    it("should be successful unauthenticated without restriction", async () => {
+        await guardUrl.execute("", "test-content", "POST");
     });
     
-    it("should be successful authenticated without restriction", () => {
-        const token = registerUser();
-        guardUrl.execute(token, "test-content", "POST");
+    it("should be successful authenticated without restriction", async () => {
+        const token = await registerUser();
+        await guardUrl.execute(token, "test-content", "POST");
     });
     
-    it("should be successful authenticated with restriction and proper roles", () => {
-        registerUser();
-        createRestriction();
-        createRole();
+    it("should be successful authenticated with restriction and proper roles", async () => {
+        await registerUser();
+        await createRestriction();
+        await createRole();
 
-        const token = loginUser();
-        guardUrl.execute(token, "test-content", "POST");
+        const token = await loginUser();
+        await guardUrl.execute(token, "test-content", "POST");
     });
     
-    it("should fail unauthenticated with restriction", () => {
-        createRestriction();
+    it("should fail unauthenticated with restriction", async () => {
+        await createRestriction();
 
         try {
-            guardUrl.execute("", "test-content", "POST");
+            await guardUrl.execute("", "test-content", "POST");
             should().fail();
         }
 
@@ -51,12 +52,12 @@ describe("authorization guard", () => {
         }
     });
     
-    it("should fail authenticated with restriction and missing role", () => {
-        const token = registerUser();
-        createRestriction();
+    it("should fail authenticated with restriction and missing role", async () => {
+        const token = await registerUser();
+        await createRestriction();
 
         try {
-            guardUrl.execute(token, "test-content", "POST");
+            await guardUrl.execute(token, "test-content", "POST");
             should().fail();
         }
 
@@ -66,34 +67,34 @@ describe("authorization guard", () => {
     });
 })
 
-function loginUser(): string {
-    const token = login.execute(new Email("test@test.com"), "Password123!");
+async function loginUser(): Promise<string> {
+    const token = await login.execute(new Email("test@test.com"), "Password123!");
     should().exist(token);
     
     return token;
 }
 
-function createRole() {
+async function createRole() {
     const role: Role = {
         email: "test@test.com",
         roles: ["admin"]
     };
-    const createRoleResult = contentManager.createContent(roleContentDefinition.getName(), role);
+    const createRoleResult = await contentManager.createContent(roleContentDefinition.getName(), role);
     should().equal(createRoleResult.getIsSuccessful(), true, createRoleResult.getMessage());
 }
 
-function createRestriction() {
+async function createRestriction() {
     const authRestriction: AuthRestriction = {
         contentDefinitionName: "test-content",
         operations: ["POST"],
         roles: ["admin"]
     };
-    const createRestrictionResult = contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
+    const createRestrictionResult = await contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
     should().equal(createRestrictionResult.getIsSuccessful(), true, createRestrictionResult.getMessage());
 }
 
-function registerUser(): string {
-    const token = register.execute(new Email("test@test.com"), "Password123!");
+async function registerUser(): Promise<string> {
+    const token = await register.execute(new Email("test@test.com"), "Password123!");
     should().exist(token);
     
     return token;

@@ -6,14 +6,18 @@ enum ErrorCode {
     InvalidInterval = "invalid-interval"
 }
 
+class SingleNumericContentFieldDefinition extends NumericContentFieldDefinition {
+    constructor() {
+        super("", "number");
+    }
+}
+
 class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition {
     constructor() {
         super("", "numeric-interval");
 
-        const numberContentFieldDefinition = new NumericContentFieldDefinition("", "number");
-
-        this.addContentField("from", numberContentFieldDefinition, { isRequired: true });
-        this.addContentField("to", numberContentFieldDefinition, { isRequired: true });
+        this.addContentField("from", new SingleNumericContentFieldDefinition(), { isRequired: true });
+        this.addContentField("to", new SingleNumericContentFieldDefinition(), { isRequired: true });
 
         this.addValidator(this.validateInterval);
     }
@@ -44,4 +48,4 @@ class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition 
 }
 
 export default new NumericIntervalContentFieldDefinition();
-export { ErrorCode };
+export { ErrorCode, SingleNumericContentFieldDefinition };
