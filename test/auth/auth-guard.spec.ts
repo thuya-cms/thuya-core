@@ -11,9 +11,9 @@ import Role from "../../auth/content/role";
 import login from "../../auth/domain/usecase/login";
 
 describe("authorization guard", () => {
-    beforeEach(() => {
-        contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
-        thuyaApp.useModule(authModule);
+    beforeEach(async () => {
+        await contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
+        await thuyaApp.useModule(authModule);
     });
 
     afterEach(() => {
@@ -48,7 +48,7 @@ describe("authorization guard", () => {
         }
 
         catch (error: any) {
-            should().equal(error.message, "jwt must be provided");
+            should().equal(error.message, "Token is empty.");
         }
     });
     

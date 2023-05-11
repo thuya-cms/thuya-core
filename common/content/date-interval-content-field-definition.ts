@@ -13,8 +13,8 @@ class SingleDateContentFieldDefinition extends DateContentFieldDefinition {
 }
 
 class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
-    private startDateFieldName = "start-date";
-    private endDateFieldName = "end-date";
+    private startDateFieldName = "startDate";
+    private endDateFieldName = "endDate";
     
     
     
@@ -30,8 +30,8 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
 
 
     private validateInterval(fieldValue: any): Result {
-        const startDateFieldName = contentHelper.getContentPropertyName("start-date", fieldValue);
-        const endDateFieldName = contentHelper.getContentPropertyName("end-date", fieldValue);
+        const startDateFieldName = contentHelper.getContentPropertyName("startDate", fieldValue);
+        const endDateFieldName = contentHelper.getContentPropertyName("endDate", fieldValue);
 
         if (!startDateFieldName || !endDateFieldName) {
             logger.debug(`Start date or end date is missing from date interval.`);

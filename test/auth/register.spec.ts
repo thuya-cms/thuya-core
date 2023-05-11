@@ -1,4 +1,4 @@
-import { TextContentFieldDefinition, contentDefinitionManager, thuyaApp } from "@thuya/framework";
+import { TextContentFieldDefinition, contentDefinitionManager, contentManager, thuyaApp } from "@thuya/framework";
 import { authModule } from "../../auth";
 import Email from "../../auth/domain/value-object/email";
 import { should } from "chai";
@@ -7,15 +7,23 @@ import { afterEach, beforeEach } from "mocha";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
 
 describe("register tests", () => {
-    beforeEach(() => {
-        contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
-        thuyaApp.useModule(authModule);
+    beforeEach(async () => {
+        await contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
+        await thuyaApp.useModule(authModule);
     });
 
     afterEach(() => {
         localPersistency.clear();
     });
 
+
+    it("should be successful with valid data", async () => {
+        await register.execute(new Email("test@test.com"), "goodPassword123!");
+        const userResult = await contentManager.readContentByFieldValue("user", { name: "email", value: "test@test.com" });
+        should().equal(userResult.getIsSuccessful(), true, userResult.getMessage());
+        should().exist(userResult.getResult().password);
+        should().not.equal(userResult.getResult().password, "goodPassword123!");
+    });
 
     it("should fail with invalid password", async () => {
         try {
@@ -49,7 +57,7 @@ describe("register tests", () => {
         }
         
         catch (error: any) {
-            should().equal(error.message, "Value of field email is not unique.");
+            should().equal(error.message, `Value "test@test.com" of field email is not unique.`);
         }
     });
 });

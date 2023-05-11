@@ -8,9 +8,9 @@ import { afterEach, beforeEach } from "mocha";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
 
 describe("login tests", () => {
-    beforeEach(() => {
-        contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
-        thuyaApp.useModule(authModule);
+    beforeEach(async () => {
+        await contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
+        await thuyaApp.useModule(authModule);
     });
 
     afterEach(() => {

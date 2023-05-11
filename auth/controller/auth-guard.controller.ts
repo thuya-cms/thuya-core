@@ -23,15 +23,15 @@ class AuthGuardController implements IController {
     }
 
 
-    private guardURL(request: Request, response: Response, next: NextFunction) {
+    private async guardURL(request: Request, response: Response, next: NextFunction) {
         try {
             const token = request.headers.authorization ? request.headers.authorization.split(" ")[1] : "";    
-            guardUrl.execute(token, expressHelper.getContentName(request), request.method);
+            await guardUrl.execute(token, expressHelper.getContentName(request), request.method);
             
             next();
         }
     
-        catch(error: any) {
+        catch (error: any) {
             response.sendStatus(401);
         }
     }

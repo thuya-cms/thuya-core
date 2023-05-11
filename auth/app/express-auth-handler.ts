@@ -5,10 +5,10 @@ import Email from "../domain/value-object/email";
 import register from "../domain/usecase/register";
 
 class ExpressAuthHandler {
-    login(request: Request, response: Response) {
+    async login(request: Request, response: Response) {
         try {
             const email = new Email(request.body.email);
-            const token = login.execute(email, request.body.password);
+            const token = await login.execute(email, request.body.password);
 
             response.json({
                 token: token
@@ -21,10 +21,10 @@ class ExpressAuthHandler {
         }
     }
 
-    register(request: Request, response: Response) {
+    async register(request: Request, response: Response) {
         try {
             const email = new Email(request.body.email);
-            const token = register.execute(email, request.body.password);
+            const token = await register.execute(email, request.body.password);
 
             response.json({
                 token: token
