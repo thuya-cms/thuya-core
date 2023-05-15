@@ -1,4 +1,4 @@
-import User from "../../content/user";
+import User from "../../content/content-definition/types/user";
 
 type UserJwtPayload = {
     email: string,

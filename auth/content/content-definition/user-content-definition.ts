@@ -1,7 +1,7 @@
-import User from "./user";
+import User from "./types/user";
 import { ContentDefinition } from '@thuya/framework';
-import emailFieldDefinition from "./email-field-definition";
-import passwordFieldDefinition from "./password-field-definition";
+import emailFieldDefinition from "../content-field/email-content-field-definition";
+import passwordFieldDefinition from "../content-field/password-content-field-definition";
 
 class UserContentDefinition extends ContentDefinition<User> {
     constructor() {

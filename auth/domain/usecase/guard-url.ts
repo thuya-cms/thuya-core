@@ -1,6 +1,6 @@
 import { contentManager, logger } from "@thuya/framework";
 import factory from "../factory";
-import authRestrictionContentDefinition from "../../content/auth-restriction-content-definition";
+import authRestrictionContentDefinition from "../../content/content-definition/auth-restriction-content-definition";
 
 class GuardUrl {
     async execute(token: string, contentName: string, operation: string) {

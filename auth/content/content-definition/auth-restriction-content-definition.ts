@@ -1,6 +1,6 @@
 import { ArrayContentFieldDefinition, ContentDefinition, TextContentFieldDefinition } from "@thuya/framework";
-import AuthRestriction from "./auth-restriction";
-import rolesContentFieldDefinition from "./roles-content-field-definition";
+import AuthRestriction from "./types/auth-restriction";
+import rolesContentFieldDefinition from "../content-field/roles-content-field-definition";
 
 class ContentDefinitionContentFieldDefinition extends TextContentFieldDefinition {
     constructor() {

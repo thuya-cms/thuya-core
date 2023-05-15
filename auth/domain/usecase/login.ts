@@ -1,9 +1,9 @@
-import userContentDefinition from "../../content/user-content-definition";
+import userContentDefinition from "../../content/content-definition/user-content-definition";
 import Email from "../value-object/email";
 import Password from "../value-object/password";
 import { contentManager, logger } from "@thuya/framework";
 import factory from "../factory";
-import roleContentDefinition from "../../content/role-content-definition";
+import roleContentDefinition from "../../content/content-definition/role-content-definition";
 
 class Login {
     async execute(email: Email, password: string): Promise<string> {

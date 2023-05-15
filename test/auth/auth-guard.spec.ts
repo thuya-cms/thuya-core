@@ -5,9 +5,9 @@ import guardUrl from "../../auth/domain/usecase/guard-url";
 import register from "../../auth/domain/usecase/register";
 import Email from "../../auth/domain/value-object/email";
 import { should } from "chai";
-import authRestrictionContentDefinition from "../../auth/content/auth-restriction-content-definition";
-import AuthRestriction from "../../auth/content/auth-restriction";
-import Role from "../../auth/content/role";
+import authRestrictionContentDefinition from "../../auth/content/content-definition/auth-restriction-content-definition";
+import AuthRestriction from "../../auth/content/content-definition/types/auth-restriction";
+import Role from "../../auth/content/content-definition/types/role";
 import login from "../../auth/domain/usecase/login";
 
 describe("authorization guard", () => {

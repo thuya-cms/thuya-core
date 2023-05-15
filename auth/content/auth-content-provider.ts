@@ -1,13 +1,13 @@
 import { ContentDefinition, ContentProvider, contentManager } from "@thuya/framework";
-import userContentDefinition from "./user-content-definition";
-import authRestrictionContentDefinition, { ContentDefinitionContentFieldDefinition, OperationContentFieldDefinition, OperationsContentFieldDefinition } from "./auth-restriction-content-definition";
-import roleContentDefinition from "./role-content-definition";
-import AuthRestriction from "./auth-restriction";
+import userContentDefinition from "./content-definition/user-content-definition";
+import authRestrictionContentDefinition, { ContentDefinitionContentFieldDefinition, OperationContentFieldDefinition, OperationsContentFieldDefinition } from "./content-definition/auth-restriction-content-definition";
+import roleContentDefinition from "./content-definition/role-content-definition";
+import AuthRestriction from "./content-definition/types/auth-restriction";
 import { ContentFieldDefinition } from "@thuya/framework";
-import emailFieldDefinition from "./email-field-definition";
-import passwordFieldDefinition from "./password-field-definition";
-import roleContentFieldDefinition from "./role-content-field-definition";
-import rolesContentFieldDefinition from "./roles-content-field-definition";
+import emailFieldDefinition from "./content-field/email-content-field-definition";
+import passwordFieldDefinition from "./content-field/password-content-field-definition";
+import roleContentFieldDefinition from "./content-field/role-content-field-definition";
+import rolesContentFieldDefinition from "./content-field/roles-content-field-definition";
 
 class AuthContentProvider extends ContentProvider {
     override getContentFieldDefinitions(): ContentFieldDefinition[] {

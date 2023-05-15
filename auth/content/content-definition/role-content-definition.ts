@@ -1,7 +1,7 @@
 import { ContentDefinition } from "@thuya/framework";
-import Role from "./role";
-import emailFieldDefinition from "./email-field-definition";
-import rolesContentFieldDefinition from "./roles-content-field-definition";
+import Role from "./types/role";
+import emailFieldDefinition from "../content-field/email-content-field-definition";
+import rolesContentFieldDefinition from "../content-field/roles-content-field-definition";
 
 class RoleContentDefinition extends ContentDefinition<Role> {
     constructor() {
