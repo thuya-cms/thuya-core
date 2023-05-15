@@ -15,6 +15,8 @@ class SingleDateContentFieldDefinition extends DateContentFieldDefinition {
 class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition {
     private startDateFieldName = "startDate";
     private endDateFieldName = "endDate";
+
+    protected filePath: string = __filename;
     
     
     

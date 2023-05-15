@@ -5,16 +5,22 @@ import expressAuthHandler from './app/express-auth-handler';
 import { authGuardController } from './controller';
 
 class AuthModule extends Module {
-    setupMiddlewares(expressApp: express.Application): void {
+    override getMetadata(): { name: string; } {
+        return {
+            name: "auth-module"
+        };
+    }
+    
+    override setupMiddlewares(expressApp: express.Application): void {
         expressApp.post("/login", expressAuthHandler.login);
         expressApp.post("/register", expressAuthHandler.register);
     }
     
-    getContentProviders(): ContentProvider[] {
+    override getContentProviders(): ContentProvider[] {
         return [authContentProvider];
     }
 
-    getControllers(): IController[] {
+    override getControllers(): IController[] {
         return [
             authGuardController
         ];

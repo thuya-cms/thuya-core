@@ -13,6 +13,10 @@ class SingleNumericContentFieldDefinition extends NumericContentFieldDefinition 
 }
 
 class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition {
+    protected filePath: string = __filename;
+    
+    
+    
     constructor() {
         super("", "numeric-interval");
 

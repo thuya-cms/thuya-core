@@ -2,6 +2,10 @@ import { TextContentFieldDefinition, ContentFieldValue, Result } from "@thuya/fr
 import Password from "../domain/value-object/password";
 
 class PasswordFieldDefinition extends TextContentFieldDefinition {
+    protected filePath: string = __filename;
+    
+    
+    
     constructor() {
         super("", "user-password");
 
