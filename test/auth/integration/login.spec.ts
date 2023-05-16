@@ -38,6 +38,20 @@ describe("login tests", () => {
             should().equal(error.message, "Invalid login attempt.");
         }
     });
+    
+    it("should fail with empty password", async () => {
+        const token = await register.execute("test@test.com", "password123!")
+        should().exist(token);
+        
+        try {
+            await login.execute("test@test.com", "");
+            should().fail();
+        }
+        
+        catch (error: any) {
+            should().equal(error.message, "Invalid login attempt.");
+        }
+    });
 
     it("should fail with invalid email", async () => {
         const token = await register.execute("test@test.com", "password123!")
@@ -45,6 +59,20 @@ describe("login tests", () => {
         
         try {
             await login.execute("test1@test.com", "password123!");
+            should().fail();
+        }
+        
+        catch (error: any) {
+            should().equal(error.message, "Invalid login attempt.");
+        }
+    });
+    
+    it("should fail with empty email", async () => {
+        const token = await register.execute("test@test.com", "password123!")
+        should().exist(token);
+        
+        try {
+            await login.execute("", "password123!");
             should().fail();
         }
         

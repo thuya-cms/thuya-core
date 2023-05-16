@@ -34,6 +34,17 @@ describe("register tests", () => {
             should().equal(error.message, "Password format is invalid.");
         }
     });
+    
+    it("should fail with empty password", async () => {
+        try {
+            await register.execute("test@test.com", "");
+            should().fail();
+        }
+        
+        catch (error: any) {
+            should().equal(error.message, "Value for field password is required.");
+        }
+    });
 
     it("should fail with invalid email", async () => {
         try {
@@ -43,6 +54,17 @@ describe("register tests", () => {
         
         catch (error: any) {
             should().equal(error.message, "Email address is invalid.");
+        }
+    });
+    
+    it("should fail with empty email", async () => {
+        try {
+            await register.execute("", "Password123!");
+            should().fail();
+        }
+        
+        catch (error: any) {
+            should().equal(error.message, "Value for field email is required.");
         }
     });
     
