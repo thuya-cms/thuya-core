@@ -27,7 +27,7 @@ class AuthRestrictionContentDefinition extends ContentDefinition<AuthRestriction
         this.addContentField(
             "contentDefinitionName", 
             new ContentDefinitionContentFieldDefinition(),
-            { isRequired: true, isUnique: true });
+            { isRequired: true });
 
         this.addContentField(
             "operations", 

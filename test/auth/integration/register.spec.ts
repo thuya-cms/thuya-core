@@ -1,8 +1,7 @@
 import { TextContentFieldDefinition, contentDefinitionManager, contentManager, thuyaApp } from "@thuya/framework";
-import { authModule } from "../../auth";
-import Email from "../../auth/domain/value-object/email";
+import { authModule } from "../../../auth";
 import { should } from "chai";
-import register from "../../auth/domain/usecase/register";
+import register from "../../../auth/domain/usecase/register";
 import { afterEach, beforeEach } from "mocha";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
 
@@ -18,7 +17,7 @@ describe("register tests", () => {
 
 
     it("should be successful with valid data", async () => {
-        await register.execute(new Email("test@test.com"), "goodPassword123!");
+        await register.execute("test@test.com", "goodPassword123!");
         const userResult = await contentManager.readContentByFieldValue("user", { name: "email", value: "test@test.com" });
         should().equal(userResult.getIsSuccessful(), true, userResult.getMessage());
         should().exist(userResult.getResult().password);
@@ -27,7 +26,7 @@ describe("register tests", () => {
 
     it("should fail with invalid password", async () => {
         try {
-            await register.execute(new Email("test@test.com"), "short");
+            await register.execute("test@test.com", "short");
             should().fail();
         }
         
@@ -38,7 +37,7 @@ describe("register tests", () => {
 
     it("should fail with invalid email", async () => {
         try {
-            await register.execute(new Email("test.com"), "Password123!");
+            await register.execute("test.com", "Password123!");
             should().fail();
         }
         
@@ -48,11 +47,11 @@ describe("register tests", () => {
     });
     
     it("should fail with existing email", async () => {
-        const token = await register.execute(new Email("test@test.com"), "Password123!");
+        const token = await register.execute("test@test.com", "Password123!");
         should().exist(token);
 
         try {
-            await register.execute(new Email("test@test.com"), "Password456!");
+            await register.execute("test@test.com", "Password456!");
             should().fail();
         }
         

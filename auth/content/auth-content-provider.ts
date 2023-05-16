@@ -1,7 +1,7 @@
 import { ContentDefinition, ContentProvider, contentManager } from "@thuya/framework";
 import userContentDefinition from "./content-definition/user-content-definition";
 import authRestrictionContentDefinition, { ContentDefinitionContentFieldDefinition, OperationContentFieldDefinition, OperationsContentFieldDefinition } from "./content-definition/auth-restriction-content-definition";
-import roleContentDefinition from "./content-definition/role-content-definition";
+import roleContentDefinition from "./content-definition/role-assignment-content-definition";
 import AuthRestriction from "./content-definition/types/auth-restriction";
 import { ContentFieldDefinition } from "@thuya/framework";
 import emailFieldDefinition from "./content-field/email-content-field-definition";

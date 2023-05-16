@@ -3,9 +3,9 @@ import Role from "./types/role";
 import emailFieldDefinition from "../content-field/email-content-field-definition";
 import rolesContentFieldDefinition from "../content-field/roles-content-field-definition";
 
-class RoleContentDefinition extends ContentDefinition<Role> {
+class RoleAssignmentContentDefinition extends ContentDefinition<Role> {
     constructor() {
-        super("", "role");
+        super("", "role-assignment");
 
         this.addContentField("email", emailFieldDefinition, { isRequired: true, isUnique: true });
 
@@ -13,4 +13,4 @@ class RoleContentDefinition extends ContentDefinition<Role> {
     }
 }
 
-export default new RoleContentDefinition();
+export default new RoleAssignmentContentDefinition();

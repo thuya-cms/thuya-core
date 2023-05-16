@@ -5,4 +5,4 @@ export { default as passwordContentFieldDefinition } from "./content/content-fie
 export { default as userContentFieldDefinition } from "./content/content-definition/user-content-definition";
 export { default as authRestrictionContentFieldDefinition } from "./content/content-definition/auth-restriction-content-definition";
 export { default as authRestriction } from "./content/content-definition/types/auth-restriction";
-export { default as roleContentDefinition } from "./content/content-definition/role-content-definition";
+export { default as roleContentDefinition } from "./content/content-definition/role-assignment-content-definition";

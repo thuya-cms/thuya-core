@@ -40,11 +40,15 @@
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
+    "@types/sinon": "^10.0.15",
+    "@types/sinon-chai": "^3.2.9",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
+    "sinon": "^15.0.4",
+    "sinon-chai": "^3.7.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   },
@@ -53,15 +57,15 @@
     "check-coverage": true,
     "all": true,
     "exclude": [
-        "dist/**/*",
-        "test/**/*"
+      "dist/**/*",
+      "test/**/*"
     ],
     "reporter": [
-        "html",
-        "lcov",
-        "text",
-        "text-summary"
+      "html",
+      "lcov",
+      "text",
+      "text-summary"
     ],
     "report-dir": "coverage"
-}
+  }
 }

@@ -1,14 +1,14 @@
 import { TextContentFieldDefinition, contentDefinitionManager, contentManager, thuyaApp } from "@thuya/framework";
-import { authModule, roleContentDefinition } from "../../auth";
+import { authModule, roleContentDefinition } from "../../../auth";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
-import guardUrl from "../../auth/domain/usecase/guard-url";
-import register from "../../auth/domain/usecase/register";
-import Email from "../../auth/domain/value-object/email";
+import guardUrl from "../../../auth/domain/usecase/guard-url";
+import register from "../../../auth/domain/usecase/register";
+import Email from "../../../auth/domain/value-object/email";
 import { should } from "chai";
-import authRestrictionContentDefinition from "../../auth/content/content-definition/auth-restriction-content-definition";
-import AuthRestriction from "../../auth/content/content-definition/types/auth-restriction";
-import Role from "../../auth/content/content-definition/types/role";
-import login from "../../auth/domain/usecase/login";
+import authRestrictionContentDefinition from "../../../auth/content/content-definition/auth-restriction-content-definition";
+import AuthRestriction from "../../../auth/content/content-definition/types/auth-restriction";
+import Role from "../../../auth/content/content-definition/types/role";
+import login from "../../../auth/domain/usecase/login";
 
 describe("authorization guard", () => {
     beforeEach(async () => {
@@ -68,7 +68,7 @@ describe("authorization guard", () => {
 })
 
 async function loginUser(): Promise<string> {
-    const token = await login.execute(new Email("test@test.com"), "Password123!");
+    const token = await login.execute("test@test.com", "Password123!");
     should().exist(token);
     
     return token;
@@ -94,7 +94,7 @@ async function createRestriction() {
 }
 
 async function registerUser(): Promise<string> {
-    const token = await register.execute(new Email("test@test.com"), "Password123!");
+    const token = await register.execute("test@test.com", "Password123!");
     should().exist(token);
     
     return token;

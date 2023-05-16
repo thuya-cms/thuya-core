@@ -1,55 +1,61 @@
 import userContentDefinition from "../../content/content-definition/user-content-definition";
-import Email from "../value-object/email";
 import Password from "../value-object/password";
 import { contentManager, logger } from "@thuya/framework";
 import factory from "../factory";
-import roleContentDefinition from "../../content/content-definition/role-content-definition";
+import roleAssignmentContentDefinition from "../../content/content-definition/role-assignment-content-definition";
 
 class Login {
-    async execute(email: Email, password: string): Promise<string> {
-        try {
-            let roles: string[];
-            const readUserContentResult = await contentManager.readContentByFieldValue(userContentDefinition.getName(), {
-                name: "email",
-                value: email.value()
-            });
+    async execute(email: string, password: string): Promise<string> {
+        const readUserContent = await this.readUserContent(email);
+        this.validatePassword(readUserContent, password, email);
+        const roles = await this.readRoles(email);
 
-            if (readUserContentResult.getIsFailing()) {
-                logger.error("Use does not exist.");
-                throw new Error("Use does not exist.");
-            }
+        const jwtService = factory.getJwtService();
+        const token = jwtService.createToken({
+            email: email,
+            roles: roles
+        });
 
-            const readRoleResult = await contentManager.readContentByFieldValue(roleContentDefinition.getName(), {
-                name: "email",
-                value: email.value()
-            });
+        return token;
+    }
 
-            if (readRoleResult.getIsSuccessful()) 
-                roles = readRoleResult.getResult().roles;
-            else 
-                roles = [];
 
-            const storedPassword = new Password(readUserContentResult.getResult().password, true);
-			const isPasswordMatching = storedPassword.compare(password);
+    private async readUserContent(email: string) {
+        const readUserContentResult = await contentManager.readContentByFieldValue(userContentDefinition.getName(), {
+            name: "email",
+            value: email
+        });
 
-			if (!isPasswordMatching) {
-                logger.error("Invalid login attempt.");
-				throw new Error("Invalid login credentials.");
-			}
+        if (readUserContentResult.getIsFailing()) {
+            logger.debug(`User "%s" does not exist.`, email);
+            logger.error("User does not exist.");
+            throw new Error("Invalid login attempt.");
+        }
 
-            const jwtService = factory.getJwtService();
-			const token = jwtService.createToken({
-                email: email.value(),
-                roles: roles
-            });
+        return readUserContentResult.getResult()!;
+    }
 
-			return token;
-		}
+    private validatePassword(readUserContent: any, password: string, email: string) {
+        const storedPassword = new Password(readUserContent.password, true);
+        const isPasswordMatching = storedPassword.compare(password);
 
-		catch(error: any) {
-			logger.error(error.message);
-			throw new Error("Unknown error during login.");
-		}
+        if (!isPasswordMatching) {
+            logger.debug(`Invalid password for user "%s".`, email);
+            logger.error("Invalid password.");
+            throw new Error("Invalid login attempt.");
+        }
+    }
+
+    private async readRoles(email: string) {
+        const readRoleResult = await contentManager.readContentByFieldValue(roleAssignmentContentDefinition.getName(), {
+            name: "email",
+            value: email
+        });
+
+        if (readRoleResult.getIsFailing())
+            return [];
+        
+        return readRoleResult.getResult().roles;
     }
 }
 

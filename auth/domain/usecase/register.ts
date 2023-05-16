@@ -1,14 +1,13 @@
 import User from "../../content/content-definition/types/user";
 import userContentDefinition from "../../content/content-definition/user-content-definition";
 import factory from "../factory";
-import Email from "../value-object/email";
 import { contentManager } from "@thuya/framework";
 
 class Register {
-    async execute(email: Email, password: string): Promise<string> {
+    async execute(email: string, password: string): Promise<string> {
         const user: User = {
             id: "",
-            email: email.value(),
+            email: email,
             password: password
         };
         const createContentResult = await contentManager.createContent(userContentDefinition.getName(), user); // Expects a not hashed password.
@@ -16,7 +15,7 @@ class Register {
             throw new Error(createContentResult.getMessage());
 
         return factory.getJwtService().createToken({
-            email: email.value(),
+            email: email,
             roles: []
         });
     }
