@@ -7,7 +7,7 @@ class RoleAssignmentContentDefinition extends ContentDefinition<Role> {
     constructor() {
         super("", "role-assignment");
 
-        this.addContentField("email", emailFieldDefinition, { isRequired: true, isUnique: true });
+        this.addContentField("email", emailFieldDefinition, { isRequired: true, isUnique: true, isIndexed: true });
 
         this.addContentField("roles", rolesContentFieldDefinition, { isRequired: true });
     }
