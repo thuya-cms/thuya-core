@@ -1,29 +1,17 @@
 import { contentManager, logger } from "@thuya/framework";
 import factory from "../factory";
 import authRestrictionContentDefinition from "../../content/content-definition/auth-restriction-content-definition";
+import AuthRestriction from "../../content/content-definition/types/auth-restriction";
+import restrictionCache from "../../service/restriction-cache";
 
 class GuardUrl {
     async execute(token: string, contentName: string, operation: string) {
         try {
             const superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
 
-            const readAuthRestrictionResult = await contentManager.readContentByFieldValue(
-                authRestrictionContentDefinition.getName(),
-                { name: "contentDefinitionName", value: contentName });
+            const authRestriction = await this.readRestriction(contentName, operation);
 
-            if (readAuthRestrictionResult.getIsFailing()) {
-                logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
-                return;
-            }
-
-            const authRestriction = readAuthRestrictionResult.getResult();
-            logger.debug(
-                `Authorization restriction exists for "%s", operations "%s", roles "%s".`, 
-                authRestriction.contentDefinitionName, 
-                authRestriction.operations, 
-                authRestriction.roles);
-
-            if (!authRestriction.operations || !authRestriction.operations.includes(operation)) {
+            if (!authRestriction || !authRestriction.operations || !authRestriction.operations.includes(operation)) {
                 logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
                 return;
             }
@@ -54,6 +42,38 @@ class GuardUrl {
             logger.debug("Not authorized to access url.");
             throw error;
         }
+    }
+
+    async readRestriction(contentName: string, operation: string): Promise<AuthRestriction | undefined> {
+        let authRestriction: AuthRestriction;
+        const cacheEntry = restrictionCache.get(contentName);
+
+        if (cacheEntry) {
+            logger.debug("Restriction found in cache.");
+            authRestriction = cacheEntry;
+        } else {
+            logger.debug("Restriction is not in the cache.");
+
+            const readAuthRestrictionResult = await contentManager.readContentByFieldValue(
+                authRestrictionContentDefinition.getName(),
+                { name: "contentDefinitionName", value: contentName });
+    
+            if (readAuthRestrictionResult.getIsFailing()) {
+                logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
+                return undefined;
+            }
+
+            authRestriction = readAuthRestrictionResult.getResult();
+            restrictionCache.set(authRestriction);
+        }
+
+        logger.debug(
+            `Authorization restriction exists for "%s", operations "%s", roles "%s".`, 
+            authRestriction.contentDefinitionName, 
+            authRestriction.operations, 
+            authRestriction.roles);
+
+        return authRestriction;
     }
 }
 

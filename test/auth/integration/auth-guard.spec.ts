@@ -38,6 +38,16 @@ describe("authorization guard", () => {
         await guardUrl.execute(token, "test-content", "POST");
     });
     
+    it("should be successful authenticated with restriction and proper roles from cache", async () => {
+        await registerUser();
+        await createRestriction();
+        await createRole();
+
+        const token = await loginUser();
+        await guardUrl.execute(token, "test-content", "POST");
+        await guardUrl.execute(token, "test-content", "POST");
+    });
+    
     it("should fail unauthenticated with restriction", async () => {
         await createRestriction();
 
