@@ -4,7 +4,7 @@ import factory from "../factory";
 import { contentManager } from "@thuya/framework";
 
 class Register {
-    async execute(email: string, password: string): Promise<string> {
+    async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
         const user: User = {
             id: "",
             email: email,
@@ -14,10 +14,17 @@ class Register {
         if (createContentResult.getIsFailing())
             throw new Error(createContentResult.getMessage());
 
-        return factory.getJwtService().createToken({
+
+        const jwtService = factory.getJwtService();
+        const token = jwtService.createToken({
             email: email,
             roles: []
         });
+
+        return {
+            token: token,
+            expiresInSeconds: jwtService.getExpiresInSeconds()
+        };
     }
 }
 

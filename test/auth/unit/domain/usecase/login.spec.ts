@@ -81,9 +81,9 @@ describe("login unit tests", () => {
 
         const createTokenStub = sinon.stub(factory.getJwtService(), "createToken").returns("token1");
     
-        const token = await login.execute("dummy@dummy.com", "DummyPass1234!");
+        const loginData = await login.execute("dummy@dummy.com", "DummyPass1234!");
 
-        expect(token).to.equal("token1");
+        expect(loginData.token).to.equal("token1");
         expect(createTokenStub).to.have.been.calledWith({
             email: "dummy@dummy.com",
             roles: []
@@ -105,9 +105,9 @@ describe("login unit tests", () => {
 
         const createTokenStub = sinon.stub(factory.getJwtService(), "createToken").returns("token1");
     
-        const token = await login.execute("dummy@dummy.com", "DummyPass1234!");
+        const loginData = await login.execute("dummy@dummy.com", "DummyPass1234!");
 
-        expect(token).to.equal("token1");
+        expect(loginData.token).to.equal("token1");
         expect(createTokenStub).to.have.been.calledWith({
             email: "dummy@dummy.com",
             roles: ["admin"]

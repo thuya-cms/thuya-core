@@ -4,8 +4,13 @@ import { logger } from '@thuya/framework';
 
 class JwtService implements IJwtService {
     private hashString = "cc27fed5-6368-44fc-97ac-bff0425d98f0";
+    private expiresInSeconds = 3600;
 
 
+
+    getExpiresInSeconds(): number {
+        return this.expiresInSeconds;
+    }
 
     createToken(user: { email: string, roles: string[] }): string {
         const payload: UserJwtPayload = {
@@ -13,7 +18,9 @@ class JwtService implements IJwtService {
             roles: user.roles
         };
 
-        return jwt.sign(payload, this.hashString);
+        return jwt.sign(payload, this.hashString, {
+            expiresIn: this.expiresInSeconds
+        });
     }
 
     verifyToken(token: string): UserJwtPayload {

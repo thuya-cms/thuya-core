@@ -77,10 +77,10 @@ describe("authorization guard", () => {
 })
 
 async function loginUser(): Promise<string> {
-    const token = await login.execute("test@test.com", "Password123!");
-    should().exist(token);
+    const loginData = await login.execute("test@test.com", "Password123!");
+    should().exist(loginData);
     
-    return token;
+    return loginData.token;
 }
 
 async function createRole() {
@@ -103,8 +103,8 @@ async function createRestriction() {
 }
 
 async function registerUser(): Promise<string> {
-    const token = await register.execute("test@test.com", "Password123!");
-    should().exist(token);
+    const registerData = await register.execute("test@test.com", "Password123!");
+    should().exist(registerData);
     
-    return token;
+    return registerData.token;
 }

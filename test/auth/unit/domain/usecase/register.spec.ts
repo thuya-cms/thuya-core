@@ -33,9 +33,9 @@ describe("register unit tests", () => {
             sinon.stub(contentManager, "createContent").returns(Promise.resolve(Result.success()));
             const createTokenStub = sinon.stub(factory.getJwtService(), "createToken").returns("token1");
 
-            const token = await register.execute("dummy@dummy.com", "DummyPass1234!");
+            const registerData = await register.execute("dummy@dummy.com", "DummyPass1234!");
 
-            expect(token).to.equal("token1");
+            expect(registerData.token).to.equal("token1");
             expect(createTokenStub).to.be.calledWith({
                 email: "dummy@dummy.com",
                 roles: []

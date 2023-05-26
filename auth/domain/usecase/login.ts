@@ -5,7 +5,7 @@ import factory from "../factory";
 import roleAssignmentContentDefinition from "../../content/content-definition/role-assignment-content-definition";
 
 class Login {
-    async execute(email: string, password: string): Promise<string> {
+    async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
         const readUserContent = await this.readUserContent(email);
         this.validatePassword(readUserContent, password, email);
         const roles = await this.readRoles(email);
@@ -16,7 +16,10 @@ class Login {
             roles: roles
         });
 
-        return token;
+        return {
+            token: token,
+            expiresInSeconds: jwtService.getExpiresInSeconds()
+        };
     }
 
 

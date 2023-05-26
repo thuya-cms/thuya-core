@@ -23,15 +23,13 @@ class LoginController implements IController {
 
     private async login(request: Request, response: Response) {
         try {
-            const token = await login.execute(request.body.email, request.body.password);
+            const loginData = await login.execute(request.body.email, request.body.password);
     
-            response.json({
-                token: token
-            }).status(200);
+            response.json(loginData).status(200);
         }
     
         catch (error: any) {
-            response.sendStatus(401);
+            response.status(401).send();
         }
     }
 }
