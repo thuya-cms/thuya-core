@@ -6,6 +6,8 @@ import restrictionCache from "../../service/restriction-cache";
 
 class GuardUrl {
     async execute(token: string, contentName: string, operation: string) {
+        logger.debug("Guarding request...");
+        
         try {
             const superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
 
@@ -36,15 +38,18 @@ class GuardUrl {
                     throw new Error("Not authorized to access url.");
                 }
             }
+
+            logger.debug("...Guarding request successful.");
         }
 
         catch (error: any) {
-            logger.debug("Not authorized to access url.");
+            logger.debug("...Guarding request failed.");
             throw error;
         }
     }
 
-    async readRestriction(contentName: string, operation: string): Promise<AuthRestriction | undefined> {
+
+    private async readRestriction(contentName: string, operation: string): Promise<AuthRestriction | undefined> {
         let authRestriction: AuthRestriction;
         const cacheEntry = restrictionCache.get(contentName);
 

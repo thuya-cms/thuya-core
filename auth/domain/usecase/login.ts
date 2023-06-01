@@ -6,20 +6,31 @@ import roleAssignmentContentDefinition from "../../content/content-definition/ro
 
 class Login {
     async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
-        const readUserContent = await this.readUserContent(email);
-        this.validatePassword(readUserContent, password, email);
-        const roles = await this.readRoles(email);
+        logger.debug("Start login...");
 
-        const jwtService = factory.getJwtService();
-        const token = jwtService.createToken({
-            email: email,
-            roles: roles
-        });
+        try {
+            const readUserContent = await this.readUserContent(email);
+            this.validatePassword(readUserContent, password, email);
+            const roles = await this.readRoles(email);
+    
+            const jwtService = factory.getJwtService();
+            const token = jwtService.createToken({
+                email: email,
+                roles: roles
+            });
+    
+            logger.debug("...Login successful.");
+    
+            return {
+                token: token,
+                expiresInSeconds: jwtService.getExpiresInSeconds()
+            };
+        }
 
-        return {
-            token: token,
-            expiresInSeconds: jwtService.getExpiresInSeconds()
-        };
+        catch (error) {
+            logger.debug("...Login failed.");
+            throw error;
+        }
     }
 
 

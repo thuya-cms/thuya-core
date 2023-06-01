@@ -1,5 +1,4 @@
 import { IController } from "@thuya/framework";
-import Email from "../domain/value-object/email";
 import login from "../domain/usecase/login";
 import { Request, Response, Router } from "express";
 
