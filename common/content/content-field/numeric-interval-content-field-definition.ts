@@ -1,4 +1,4 @@
-import { GroupContentFieldDefinition, NumericContentFieldDefinition, Result, contentHelper, logger } from "@thuya/framework";
+import { GroupContentFieldDefinition, Logger, NumericContentFieldDefinition, Result } from "@thuya/framework";
 
 type NumericInterval = {
     from: number,
@@ -12,12 +12,16 @@ class SingleNumericContentFieldDefinition extends NumericContentFieldDefinition 
 }
 
 class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition<NumericInterval> {
+    private logger: Logger;
+    
     protected filePath: string = __filename;
     
     
     
     constructor() {
         super("", "numeric-interval");
+
+        this.logger = Logger.for(NumericIntervalContentFieldDefinition.toString());
 
         this.addContentField("from", new SingleNumericContentFieldDefinition(), { isRequired: true });
         this.addContentField("to", new SingleNumericContentFieldDefinition(), { isRequired: true });
@@ -29,7 +33,7 @@ class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition<
 
     private validateInterval(fieldValue: NumericInterval): Result {
         if (fieldValue.to < fieldValue.from) {
-            logger.debug(`Invalid numeric interval "%s - %s".`, fieldValue.from, fieldValue.to);
+            this.logger.debug(`Invalid numeric interval "%s - %s".`, fieldValue.from, fieldValue.to);
             return Result.error(`Invalid numeric interval "${ fieldValue.from } - ${ fieldValue.to }".`);
         }
 

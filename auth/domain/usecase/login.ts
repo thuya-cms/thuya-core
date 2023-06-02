@@ -1,12 +1,22 @@
 import userContentDefinition from "../../content/content-definition/user-content-definition";
 import Password from "../value-object/password";
-import { contentManager, logger } from "@thuya/framework";
+import { contentManager, Logger } from "@thuya/framework";
 import factory from "../factory";
 import roleAssignmentContentDefinition from "../../content/content-definition/role-assignment-content-definition";
 
 class Login {
+    private logger: Logger;
+
+
+
+    constructor() {
+        this.logger = Logger.for(Login.toString());
+    }
+
+
+
     async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
-        logger.debug("Start login...");
+        this.logger.debug("Start login...");
 
         try {
             const readUserContent = await this.readUserContent(email);
@@ -19,7 +29,7 @@ class Login {
                 roles: roles
             });
     
-            logger.debug("...Login successful.");
+            this.logger.debug("...Login successful.");
     
             return {
                 token: token,
@@ -28,7 +38,7 @@ class Login {
         }
 
         catch (error) {
-            logger.debug("...Login failed.");
+            this.logger.debug("...Login failed.");
             throw error;
         }
     }
@@ -41,8 +51,7 @@ class Login {
         });
 
         if (readUserContentResult.getIsFailing()) {
-            logger.debug(`User "%s" does not exist.`, email);
-            logger.error("User does not exist.");
+            this.logger.error(`User "%s" does not exist.`, email);
             throw new Error("Invalid login attempt.");
         }
 
@@ -54,8 +63,8 @@ class Login {
         const isPasswordMatching = storedPassword.compare(password);
 
         if (!isPasswordMatching) {
-            logger.debug(`Invalid password for user "%s".`, email);
-            logger.error("Invalid password.");
+            this.logger.debug(`Invalid password for user "%s".`, email);
+            this.logger.error("Invalid password.");
             throw new Error("Invalid login attempt.");
         }
     }

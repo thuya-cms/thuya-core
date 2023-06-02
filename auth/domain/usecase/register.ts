@@ -1,11 +1,21 @@
 import User from "../../content/content-definition/types/user";
 import userContentDefinition from "../../content/content-definition/user-content-definition";
 import factory from "../factory";
-import { contentManager, logger } from "@thuya/framework";
+import { contentManager, Logger } from "@thuya/framework";
 
 class Register {
+    private logger: Logger;
+
+
+
+    constructor() {
+        this.logger = Logger.for(Register.toString());
+    }
+
+
+
     async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
-        logger.debug("Start registration...");
+        this.logger.debug("Start registration...");
 
         try {
             const user: User = {
@@ -24,7 +34,7 @@ class Register {
                 roles: []
             });
     
-            logger.debug("...Registration successful.");
+            this.logger.debug("...Registration successful.");
 
             return {
                 token: token,
@@ -33,7 +43,7 @@ class Register {
         }
 
         catch (error) {
-            logger.debug("...Registration failed.");
+            this.logger.debug("...Registration failed.");
             throw error;
         }
     }

@@ -1,12 +1,22 @@
-import { contentManager, logger } from "@thuya/framework";
+import { Logger, contentManager } from "@thuya/framework";
 import factory from "../factory";
 import authRestrictionContentDefinition from "../../content/content-definition/auth-restriction-content-definition";
 import AuthRestriction from "../../content/content-definition/types/auth-restriction";
 import restrictionCache from "../../service/restriction-cache";
 
 class GuardUrl {
+    private logger: Logger;
+
+
+
+    constructor() {
+        this.logger = Logger.for(GuardUrl.toString());
+    }
+
+
+
     async execute(token: string, contentName: string, operation: string) {
-        logger.debug("Guarding request...");
+        this.logger.debug(`Guarding request for content "%s", operation "%s"...`, contentName, operation);
         
         try {
             const superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
@@ -14,14 +24,16 @@ class GuardUrl {
             const authRestriction = await this.readRestriction(contentName, operation);
 
             if (!authRestriction || !authRestriction.operations || !authRestriction.operations.includes(operation)) {
-                logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
+                this.logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
+                this.logger.debug("...Guarding request successful.");
                 return;
             }
-
+            
             const payload = factory.getJwtService().verifyToken(token);
-
+            
             if (superadminEmail && superadminEmail === payload.email) {
-                logger.debug("Superadmin access.");
+                this.logger.debug("Superadmin access.");
+                this.logger.debug("...Guarding request successful.");
                 return;
             }
 
@@ -39,11 +51,12 @@ class GuardUrl {
                 }
             }
 
-            logger.debug("...Guarding request successful.");
+            this.logger.debug("User has the required authorization.");
+            this.logger.debug("...Guarding request successful.");
         }
 
         catch (error: any) {
-            logger.debug("...Guarding request failed.");
+            this.logger.debug("...Guarding request failed.");
             throw error;
         }
     }
@@ -54,17 +67,17 @@ class GuardUrl {
         const cacheEntry = restrictionCache.get(contentName);
 
         if (cacheEntry) {
-            logger.debug("Restriction found in cache.");
+            this.logger.debug("Restriction found in cache.");
             authRestriction = cacheEntry;
         } else {
-            logger.debug("Restriction is not in the cache.");
+            this.logger.debug("Restriction is not in the cache.");
 
             const readAuthRestrictionResult = await contentManager.readContentByFieldValue(
                 authRestrictionContentDefinition.getName(),
                 { name: "contentDefinitionName", value: contentName });
     
             if (readAuthRestrictionResult.getIsFailing()) {
-                logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
+                this.logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
                 return undefined;
             }
 
@@ -72,7 +85,7 @@ class GuardUrl {
             restrictionCache.set(authRestriction);
         }
 
-        logger.debug(
+        this.logger.debug(
             `Authorization restriction exists for "%s", operations "%s", roles "%s".`, 
             authRestriction.contentDefinitionName, 
             authRestriction.operations, 

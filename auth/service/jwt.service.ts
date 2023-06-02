@@ -1,10 +1,17 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import IJwtService, { UserJwtPayload } from "../domain/usecase/jwt.interface";
-import { logger } from '@thuya/framework';
+import { Logger } from '@thuya/framework';
 
 class JwtService implements IJwtService {
     private hashString = "cc27fed5-6368-44fc-97ac-bff0425d98f0";
     private expiresInSeconds = 3600;
+    private logger: Logger;
+
+
+
+    constructor() {
+        this.logger = Logger.for(JwtService.toString());
+    }
 
 
 
@@ -25,7 +32,7 @@ class JwtService implements IJwtService {
 
     verifyToken(token: string): UserJwtPayload {
         if (!token) {
-            logger.debug("Token is empty.");
+            this.logger.debug("Token is empty.");
             throw new Error("Token is empty.");
         }
 

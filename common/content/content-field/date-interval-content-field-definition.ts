@@ -1,4 +1,4 @@
-import { DateContentFieldDefinition, GroupContentFieldDefinition, Result, contentHelper, logger } from "@thuya/framework";
+import { DateContentFieldDefinition, GroupContentFieldDefinition, Result, Logger } from "@thuya/framework";
 
 type DateInterval = {
     startDate: Date,
@@ -14,6 +14,7 @@ class SingleDateContentFieldDefinition extends DateContentFieldDefinition {
 class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition<DateInterval> {
     private startDateFieldName = "startDate";
     private endDateFieldName = "endDate";
+    private logger: Logger;
 
     protected filePath: string = __filename;
     
@@ -21,6 +22,8 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition<Dat
     
     constructor() {
         super("", "date-interval");
+
+        this.logger = Logger.for(DateIntervalContentFieldDefinition.toString());
 
         this.addContentField(this.startDateFieldName, new SingleDateContentFieldDefinition(), { isRequired: true });
         this.addContentField(this.endDateFieldName, new SingleDateContentFieldDefinition(), { isRequired: true });
@@ -32,7 +35,7 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition<Dat
 
     private validateInterval(fieldValue: DateInterval): Result {
         if (fieldValue.endDate < fieldValue.startDate) {
-            logger.debug(`Invalid date interval "%s - %s".`, fieldValue.startDate, fieldValue.endDate);
+            this.logger.debug(`Invalid date interval "%s - %s".`, fieldValue.startDate, fieldValue.endDate);
             return Result.error(`Invalid date interval "${ fieldValue.startDate } - ${ fieldValue.endDate }".`);
         }
 

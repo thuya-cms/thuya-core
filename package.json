@@ -1,6 +1,6 @@
 {
   "name": "@thuya/core",
-  "version": "0.0.2",
+  "version": "0.0.8",
   "description": "Thuya CMS - Core features",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/Geri101/thuya-core#readme",
   "dependencies": {
-    "@thuya/framework": "^0.0.4",
+    "@thuya/framework": "development",
     "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.1",
