@@ -21,7 +21,7 @@ class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition<
     constructor() {
         super("", "numeric-interval");
 
-        this.logger = Logger.for(NumericIntervalContentFieldDefinition.toString());
+        this.logger = Logger.for(NumericIntervalContentFieldDefinition.name);
 
         this.addContentField("from", new SingleNumericContentFieldDefinition(), { isRequired: true });
         this.addContentField("to", new SingleNumericContentFieldDefinition(), { isRequired: true });

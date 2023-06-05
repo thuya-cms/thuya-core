@@ -23,7 +23,7 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition<Dat
     constructor() {
         super("", "date-interval");
 
-        this.logger = Logger.for(DateIntervalContentFieldDefinition.toString());
+        this.logger = Logger.for(DateIntervalContentFieldDefinition.name);
 
         this.addContentField(this.startDateFieldName, new SingleDateContentFieldDefinition(), { isRequired: true });
         this.addContentField(this.endDateFieldName, new SingleDateContentFieldDefinition(), { isRequired: true });

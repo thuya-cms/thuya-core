@@ -10,7 +10,7 @@ class GuardUrl {
 
 
     constructor() {
-        this.logger = Logger.for(GuardUrl.toString());
+        this.logger = Logger.for(GuardUrl.name);
     }
 
 

@@ -10,7 +10,7 @@ class Login {
 
 
     constructor() {
-        this.logger = Logger.for(Login.toString());
+        this.logger = Logger.for(Login.name);
     }
 
 

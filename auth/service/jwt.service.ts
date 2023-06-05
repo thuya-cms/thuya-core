@@ -10,7 +10,7 @@ class JwtService implements IJwtService {
 
 
     constructor() {
-        this.logger = Logger.for(JwtService.toString());
+        this.logger = Logger.for(JwtService.name);
     }
 
 

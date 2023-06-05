@@ -9,7 +9,7 @@ class Register {
 
 
     constructor() {
-        this.logger = Logger.for(Register.toString());
+        this.logger = Logger.for(Register.name);
     }
 
 
