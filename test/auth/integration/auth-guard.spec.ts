@@ -97,7 +97,7 @@ async function createRestriction() {
     const authRestriction: AuthRestriction = {
         contentDefinitionName: "test-content",
         operations: ["POST"],
-        roles: ["admin"]
+        authorizedRoles: ["admin"]
     };
     const createRestrictionResult = await contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
     should().equal(createRestrictionResult.getIsSuccessful(), true, createRestrictionResult.getMessage());

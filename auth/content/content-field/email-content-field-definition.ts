@@ -7,7 +7,7 @@ class EmailContentFieldDefinition extends TextContentFieldDefinition {
 
 
     constructor() {
-        super("", "user-email");
+        super("", "email");
 
         this.addValidator(this.validateFormat);
     }

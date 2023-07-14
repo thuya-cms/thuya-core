@@ -7,7 +7,7 @@ class PasswordContentFieldDefinition extends TextContentFieldDefinition {
     
     
     constructor() {
-        super("", "user-password");
+        super("", "password");
 
         this.addValidator(this.validateFormat);
         this.addDetermination(this.hashPassword)

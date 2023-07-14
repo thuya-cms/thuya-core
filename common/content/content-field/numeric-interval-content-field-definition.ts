@@ -1,14 +1,9 @@
-import { GroupContentFieldDefinition, Logger, NumericContentFieldDefinition, Result } from "@thuya/framework";
+import { GroupContentFieldDefinition, Logger, Result } from "@thuya/framework";
+import commonNumericContentFieldDefinition from "./common-numeric-content-field-definition";
 
 type NumericInterval = {
     from: number,
     to: number
-}
-
-class SingleNumericContentFieldDefinition extends NumericContentFieldDefinition {
-    constructor() {
-        super("", "number");
-    }
 }
 
 class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition<NumericInterval> {
@@ -23,8 +18,8 @@ class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition<
 
         this.logger = Logger.for(NumericIntervalContentFieldDefinition.name);
 
-        this.addContentField("from", new SingleNumericContentFieldDefinition(), { isRequired: true });
-        this.addContentField("to", new SingleNumericContentFieldDefinition(), { isRequired: true });
+        this.addContentField("from", commonNumericContentFieldDefinition, { isRequired: true });
+        this.addContentField("to", commonNumericContentFieldDefinition, { isRequired: true });
 
         this.addValidator(this.validateInterval);
     }
@@ -42,4 +37,3 @@ class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition<
 }
 
 export default new NumericIntervalContentFieldDefinition();
-export { SingleNumericContentFieldDefinition };

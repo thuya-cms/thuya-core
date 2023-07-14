@@ -37,9 +37,9 @@ class GuardUrl {
                 return;
             }
 
-            if (authRestriction.roles && authRestriction.roles.length > 0) {
+            if (authRestriction.authorizedRoles && authRestriction.authorizedRoles.length > 0) {
                 let hasRole = false;
-                for (const requiredRole of authRestriction.roles) {
+                for (const requiredRole of authRestriction.authorizedRoles) {
                     if (payload.roles.includes(requiredRole)) {
                         hasRole = true;
                         break;
@@ -89,7 +89,7 @@ class GuardUrl {
             `Authorization restriction exists for "%s", operations "%s", roles "%s".`, 
             authRestriction.contentDefinitionName, 
             authRestriction.operations, 
-            authRestriction.roles);
+            authRestriction.authorizedRoles);
 
         return authRestriction;
     }

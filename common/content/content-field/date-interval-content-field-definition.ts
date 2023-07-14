@@ -1,19 +1,12 @@
-import { DateContentFieldDefinition, GroupContentFieldDefinition, Result, Logger } from "@thuya/framework";
+import { GroupContentFieldDefinition, Result, Logger } from "@thuya/framework";
+import commonDateContentFieldDefinition from "./common-date-content-field-definition";
 
 type DateInterval = {
     startDate: Date,
     endDate: Date
 }
 
-class SingleDateContentFieldDefinition extends DateContentFieldDefinition {
-    constructor() {
-        super("", "date");
-    }
-}
-
 class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition<DateInterval> {
-    private startDateFieldName = "startDate";
-    private endDateFieldName = "endDate";
     private logger: Logger;
 
     protected filePath: string = __filename;
@@ -25,8 +18,8 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition<Dat
 
         this.logger = Logger.for(DateIntervalContentFieldDefinition.name);
 
-        this.addContentField(this.startDateFieldName, new SingleDateContentFieldDefinition(), { isRequired: true });
-        this.addContentField(this.endDateFieldName, new SingleDateContentFieldDefinition(), { isRequired: true });
+        this.addContentField("startDate", commonDateContentFieldDefinition, { isRequired: true });
+        this.addContentField("endDate", commonDateContentFieldDefinition, { isRequired: true });
 
         this.addValidator(this.validateInterval);
     }
@@ -44,4 +37,3 @@ class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition<Dat
 }
 
 export default new DateIntervalContentFieldDefinition();
-export { SingleDateContentFieldDefinition };
