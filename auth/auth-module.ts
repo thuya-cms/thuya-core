@@ -5,9 +5,10 @@ import loginController from './controller/login.controller';
 import registerController from './controller/register.controller';
 
 class AuthModule extends Module {
-    override getMetadata(): { name: string; } {
+    override getMetadata(): { name: string, version: number } {
         return {
-            name: "auth-module"
+            name: "auth-module",
+            version: 1
         };
     }
     

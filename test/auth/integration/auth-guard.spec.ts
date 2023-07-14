@@ -12,6 +12,7 @@ import login from "../../../auth/domain/usecase/login";
 describe("authorization guard", () => {
     beforeEach(async () => {
         await contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
+        await thuyaApp.initialize();
         await thuyaApp.useModule(authModule);
     });
 

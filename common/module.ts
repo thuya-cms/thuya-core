@@ -2,9 +2,10 @@ import { ContentProvider, Module } from "@thuya/framework";
 import commonContentProvider from "./content/common-content-provider";
 
 class CommonModule extends Module {
-    override getMetadata(): { name: string; } {
+    override getMetadata(): { name: string, version: number } {
         return {
-            name: "common-module"
+            name: "common-module",
+            version: 1
         };
     }
 

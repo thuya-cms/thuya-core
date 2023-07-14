@@ -8,6 +8,7 @@ import localPersistency from "@thuya/framework/dist/content-management/persisten
 describe("register tests", () => {
     beforeEach(async () => {
         await contentDefinitionManager.createContentFieldDefinition(new TextContentFieldDefinition("", "id"));
+        await thuyaApp.initialize();
         await thuyaApp.useModule(authModule);
     });
 
