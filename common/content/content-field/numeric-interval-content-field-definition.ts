@@ -6,10 +6,14 @@ type NumericInterval = {
     to: number
 }
 
+/**
+ * Content field definition for numeric intervals.
+ */
 class NumericIntervalContentFieldDefinition extends GroupContentFieldDefinition<NumericInterval> {
-    private logger: Logger;
-    
     protected filePath: string = __filename;
+    
+    
+    private logger: Logger;
     
     
     

@@ -1,6 +1,9 @@
 import { TextContentFieldDefinition, Result } from "@thuya/framework";
 import Password from "../../domain/value-object/password";
 
+/**
+ * Content field definition for passwords.
+ */
 class PasswordContentFieldDefinition extends TextContentFieldDefinition {
     protected filePath: string = __filename;
     
@@ -27,7 +30,7 @@ class PasswordContentFieldDefinition extends TextContentFieldDefinition {
         }
     }
     
-    private hashPassword(contentFieldData: string) {
+    private hashPassword(contentFieldData: string): string {
         const password = new Password(contentFieldData.toString());
         return password.value();
     }

@@ -7,7 +7,13 @@ import passwordFieldDefinition from "./content-field/password-content-field-defi
 import roleContentFieldDefinition from "./content-field/role-content-field-definition";
 import rolesContentFieldDefinition from "./content-field/roles-content-field-definition";
 
+/**
+ * Content provider for authentication and authorization module.
+ */
 class AuthContentProvider extends ContentProvider {
+    /**
+     * @inheritdoc
+     */
     override getContentFieldDefinitions(): ContentFieldDefinition[] {
         return [
             emailFieldDefinition, 
@@ -20,10 +26,16 @@ class AuthContentProvider extends ContentProvider {
             new ContentDefinitionContentFieldDefinition()];
     }
 
+    /**
+     * @inheritdoc
+     */
     override getContentDefinitions(): ContentDefinition[] {
         return [userContentDefinition, authRestrictionContentDefinition, roleContentDefinition];
     }
 
+    /**
+     * @inheritdoc
+     */
     override getInitialContent(): { contentDefinitionName: string, content: any }[] {
         return [{
             contentDefinitionName: authRestrictionContentDefinition.getName(),

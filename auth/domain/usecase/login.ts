@@ -3,7 +3,11 @@ import Password from "../value-object/password";
 import { contentManager, Logger } from "@thuya/framework";
 import factory from "../factory";
 import roleAssignmentContentDefinition from "../../content/content-definition/role-assignment-content-definition";
+import User from "../../content/content-definition/types/user";
 
+/**
+ * Use case to log in a user.
+ */
 class Login {
     private logger: Logger;
 
@@ -15,6 +19,13 @@ class Login {
 
 
 
+    /**
+     * Execute user login.
+     * 
+     * @param email email of the user
+     * @param password password of the user
+     * @returns a JWT token and the expiration date of it
+     */
     async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
         this.logger.debug("Start login...");
 
@@ -44,7 +55,7 @@ class Login {
     }
 
 
-    private async readUserContent(email: string) {
+    private async readUserContent(email: string): Promise<User> {
         const readUserContentResult = await contentManager.readContentByFieldValue(userContentDefinition.getName(), {
             name: "email",
             value: email
@@ -58,7 +69,7 @@ class Login {
         return readUserContentResult.getResult()!;
     }
 
-    private validatePassword(readUserContent: any, password: string, email: string) {
+    private validatePassword(readUserContent: any, password: string, email: string): void {
         const storedPassword = new Password(readUserContent.password, true);
         const isPasswordMatching = storedPassword.compare(password);
 
@@ -69,7 +80,7 @@ class Login {
         }
     }
 
-    private async readRoles(email: string) {
+    private async readRoles(email: string): Promise<string[]> {
         const readRoleResult = await contentManager.readContentByFieldValue(roleAssignmentContentDefinition.getName(), {
             name: "email",
             value: email

@@ -6,10 +6,13 @@ type DateInterval = {
     endDate: Date
 }
 
+/**
+ * Content field definition for date intervals.
+ */
 class DateIntervalContentFieldDefinition extends GroupContentFieldDefinition<DateInterval> {
-    private logger: Logger;
-
     protected filePath: string = __filename;
+    
+    private logger: Logger;
     
     
     

@@ -4,6 +4,9 @@ import authRestrictionContentDefinition from "../../content/content-definition/a
 import AuthRestriction from "../../content/content-definition/types/auth-restriction";
 import restrictionCache from "../../service/restriction-cache";
 
+/**
+ * Use case to guard an URL based on authorization restrictions.
+ */
 class GuardUrl {
     private logger: Logger;
 
@@ -15,7 +18,15 @@ class GuardUrl {
 
 
 
-    async execute(token: string, contentName: string, operation: string) {
+    /**
+     * Execute the authorization guard.
+     * 
+     * @param token the JWT token of the session
+     * @param contentName name of the requested content definition
+     * @param operation executed operation
+     * @async
+     */
+    async execute(token: string, contentName: string, operation: string): Promise<void> {
         this.logger.debug(`Guarding request for content "%s", operation "%s"...`, contentName, operation);
         
         try {

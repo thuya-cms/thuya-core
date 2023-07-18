@@ -2,6 +2,9 @@ import { IController } from "@thuya/framework";
 import { Request, Response, Router } from "express";
 import register from "../domain/usecase/register";
 
+/**
+ * Controller to register users.
+ */
 class RegisterController implements IController {
     private router: Router;
 
@@ -15,12 +18,15 @@ class RegisterController implements IController {
     
     
     
+    /**
+     * @inheritdoc
+     */
     getRouter(): Router {
         return this.router;
     }
 
 
-    private async register(request: Request, response: Response) {
+    private async register(request: Request, response: Response): Promise<void> {
         try {
             const registerData = await register.execute(request.body.email, request.body.password);
 
