@@ -7,3 +7,5 @@ export { default as userContentDefinition } from "./content/content-definition/u
 export { default as authRestrictionContentDefinition } from "./content/content-definition/auth-restriction-content-definition";
 export { default as authRestriction } from "./content/content-definition/types/auth-restriction";
 export { default as roleAssignmentContentDefinition } from "./content/content-definition/role-assignment-content-definition";
+
+export * from "./app/index";
