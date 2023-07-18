@@ -4,7 +4,13 @@ import { authGuardController } from './controller';
 import loginController from './controller/login.controller';
 import registerController from './controller/register.controller';
 
+/**
+ * Module for authentication and authorization.
+ */
 class AuthModule extends Module {
+    /**
+     * @inheritdoc
+     */
     override getMetadata(): { name: string, version: number } {
         return {
             name: "auth-module",
@@ -12,10 +18,16 @@ class AuthModule extends Module {
         };
     }
     
+    /**
+     * @inheritdoc
+     */
     override getContentProviders(): ContentProvider[] {
         return [authContentProvider];
     }
 
+    /**
+     * @inheritdoc
+     */
     override getControllers(): IController[] {
         return [
             authGuardController,

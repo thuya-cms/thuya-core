@@ -3,6 +3,9 @@ import Role from "./types/role";
 import emailFieldDefinition from "../content-field/email-content-field-definition";
 import rolesContentFieldDefinition from "../content-field/roles-content-field-definition";
 
+/**
+ * Content definition for role assignments.
+ */
 class RoleAssignmentContentDefinition extends ContentDefinition<Role> {
     constructor() {
         super("", "role-assignment");

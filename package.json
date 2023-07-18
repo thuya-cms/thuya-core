@@ -48,6 +48,7 @@
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
+    "eslint-plugin-jsdoc": "^46.2.6",
     "sinon": "^15.0.4",
     "sinon-chai": "^3.7.0",
     "ts-node": "^10.9.1",
@@ -70,10 +71,9 @@
     "report-dir": "coverage"
   },
   "scripts": {
+    "eslint": "eslint . --max-warnings 0",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "test:coverage": "nyc npm run test",
-    "prepare": "npm run build",
-    "publish:dev": "npm publish --tag development",
     "build": "npx tsc",
     "build:dev": "npx tsc -p tsconfig-dev.json",
     "link": "npm link",

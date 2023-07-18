@@ -5,7 +5,13 @@ import commonNumericContentFieldDefinition from "./content-field/common-numeric-
 import commonTextContentFieldDefinition from "./content-field/common-text-content-field-definition";
 import commonDateContentFieldDefinition from "./content-field/common-date-content-field-definition";
 
+/**
+ * Content provider for common content.
+ */
 class CommonContentProvider extends ContentProvider {
+    /**
+     * @inheritdoc
+     */
     override getContentFieldDefinitions(): ContentFieldDefinition[] {
         return [
             commonNumericContentFieldDefinition,

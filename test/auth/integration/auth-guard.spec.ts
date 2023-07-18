@@ -6,7 +6,7 @@ import register from "../../../auth/domain/usecase/register";
 import { should } from "chai";
 import authRestrictionContentDefinition from "../../../auth/content/content-definition/auth-restriction-content-definition";
 import AuthRestriction from "../../../auth/content/content-definition/types/auth-restriction";
-import Role from "../../../auth/content/content-definition/types/role";
+import RoleAssignment from "../../../auth/content/content-definition/types/role";
 import login from "../../../auth/domain/usecase/login";
 
 describe("authorization guard", () => {
@@ -33,7 +33,7 @@ describe("authorization guard", () => {
     it("should be successful authenticated with restriction and proper roles", async () => {
         await registerUser();
         await createRestriction();
-        await createRole();
+        await createRoleAssignment();
 
         const token = await loginUser();
         await guardUrl.execute(token, "test-content", "POST");
@@ -42,7 +42,7 @@ describe("authorization guard", () => {
     it("should be successful authenticated with restriction and proper roles from cache", async () => {
         await registerUser();
         await createRestriction();
-        await createRole();
+        await createRoleAssignment();
 
         const token = await loginUser();
         await guardUrl.execute(token, "test-content", "POST");
@@ -77,6 +77,11 @@ describe("authorization guard", () => {
     });
 })
 
+/**
+ * Login with test user.
+ * 
+ * @returns the JWT token
+ */
 async function loginUser(): Promise<string> {
     const loginData = await login.execute("test@test.com", "Password123!");
     should().exist(loginData);
@@ -84,8 +89,11 @@ async function loginUser(): Promise<string> {
     return loginData.token;
 }
 
-async function createRole() {
-    const role: Role = {
+/**
+ * Create role assignment for the admin role and test user.
+ */
+async function createRoleAssignment(): Promise<void> {
+    const role: RoleAssignment = {
         email: "test@test.com",
         roles: ["admin"]
     };
@@ -93,7 +101,10 @@ async function createRole() {
     should().equal(createRoleResult.getIsSuccessful(), true, createRoleResult.getMessage());
 }
 
-async function createRestriction() {
+/**
+ * Create a restriction for test content.
+ */
+async function createRestriction(): Promise<void> {
     const authRestriction: AuthRestriction = {
         contentDefinitionName: "test-content",
         operations: ["POST"],
@@ -103,6 +114,11 @@ async function createRestriction() {
     should().equal(createRestrictionResult.getIsSuccessful(), true, createRestrictionResult.getMessage());
 }
 
+/**
+ * Register test user.
+ * 
+ * @returns 
+ */
 async function registerUser(): Promise<string> {
     const registerData = await register.execute("test@test.com", "Password123!");
     should().exist(registerData);

@@ -3,6 +3,9 @@ import userContentDefinition from "../../content/content-definition/user-content
 import factory from "../factory";
 import { contentManager, Logger } from "@thuya/framework";
 
+/**
+ * Use case to register a user.
+ */
 class Register {
     private logger: Logger;
 
@@ -14,6 +17,13 @@ class Register {
 
 
 
+    /**
+     * execute user registration.
+     * 
+     * @param email email address of the user
+     * @param password password of the user
+     * @returns a JWT token and the expiration date of it
+     */
     async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
         this.logger.debug("Start registration...");
 

@@ -2,6 +2,9 @@ import { IController } from "@thuya/framework";
 import login from "../domain/usecase/login";
 import { Request, Response, Router } from "express";
 
+/**
+ * Controller to login users.
+ */
 class LoginController implements IController {
     private router: Router;
 
@@ -15,12 +18,15 @@ class LoginController implements IController {
     
     
     
+    /**
+     * @inheritdoc
+     */
     getRouter(): Router {
         return this.router;
     }
 
 
-    private async login(request: Request, response: Response) {
+    private async login(request: Request, response: Response): Promise<void> {
         try {
             const loginData = await login.execute(request.body.email, request.body.password);
     

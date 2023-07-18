@@ -1,6 +1,9 @@
 import { TextContentFieldDefinition, Result } from "@thuya/framework";
 import Email from "../../domain/value-object/email";
 
+/**
+ * Content field definition for email addresses.
+ */
 class EmailContentFieldDefinition extends TextContentFieldDefinition {
     protected filePath: string = __filename;
 

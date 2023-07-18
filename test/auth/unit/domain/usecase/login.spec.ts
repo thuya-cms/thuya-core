@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import login from "../../../../../auth/domain/usecase/login";
-import Email from "../../../../../auth/domain/value-object/email";
 import { contentManager, Result } from "@thuya/framework";
 import sinon from "sinon";
 import Password from "../../../../../auth/domain/value-object/password";

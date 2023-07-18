@@ -1,6 +1,9 @@
 import jwtService from "../service/jwt.service";
 import IJwtService from "./usecase/jwt.interface";
 
+/**
+ * Factory for services.
+ */
 class Factory {
     private jwtService!: IJwtService;
 
@@ -12,6 +15,9 @@ class Factory {
 
     
 
+    /**
+     * @returns the JWT service instance
+     */
     getJwtService(): IJwtService {
         return this.jwtService;
     }

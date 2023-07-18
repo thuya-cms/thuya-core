@@ -1,5 +1,8 @@
 import AuthRestriction from "../content/content-definition/types/auth-restriction";
 
+/**
+ * Local cache for authorization restrictions.
+ */
 class RestrictionCache {
     private cache: {
         updatedAt: Date,
@@ -9,7 +12,14 @@ class RestrictionCache {
     private ttlMinutes = 10; 
     
     
-    set(restriction: AuthRestriction) {
+
+    /**
+     * Set an authorization restriction in the cache.
+     * 
+     * @param restriction the authorization restriction
+     * @returns 
+     */
+    set(restriction: AuthRestriction): { updatedAt: Date, contentDefinitionName: string, restriction: AuthRestriction } {
         let existingCacheEntry = this.cache.find(cacheEntry => cacheEntry.contentDefinitionName === restriction.contentDefinitionName);
         
         if (existingCacheEntry) {
@@ -27,6 +37,12 @@ class RestrictionCache {
         return existingCacheEntry;
     }
 
+    /**
+     * Get a restriction from the cache.
+     * 
+     * @param restrictionName the target content definition name of the authorization restriction
+     * @returns the authorization restriction or undefined
+     */
     get(restrictionName: string): AuthRestriction | undefined {
         const existingCacheEntryIndex = this.cache.findIndex(cacheEntry => cacheEntry.contentDefinitionName === restrictionName);
 

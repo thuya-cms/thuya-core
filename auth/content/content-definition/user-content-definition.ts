@@ -3,6 +3,9 @@ import { ContentDefinition } from '@thuya/framework';
 import emailFieldDefinition from "../content-field/email-content-field-definition";
 import passwordFieldDefinition from "../content-field/password-content-field-definition";
 
+/**
+ * Content definition for users.
+ */
 class UserContentDefinition extends ContentDefinition<User> {
     constructor() {
         super("", "user");
