@@ -1,6 +1,6 @@
 import { TextContentFieldDefinition, contentDefinitionManager, contentManager, thuyaApp } from "@thuya/framework";
 import { authModule } from "../../../auth";
-import { should } from "chai";
+import { expect, should } from "chai";
 import register from "../../../auth/domain/usecase/register";
 import { afterEach, beforeEach } from "mocha";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
@@ -26,60 +26,35 @@ describe("register tests", () => {
     });
 
     it("should fail with invalid password", async () => {
-        try {
-            await register.execute("test@test.com", "short");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, "Password format is invalid.");
-        }
+        const registerResult = await register.execute("test@test.com", "short");
+        expect(registerResult.getIsFailing()).to.be.true;
+        expect(registerResult.getMessage()).to.equal("Password format is invalid.");
     });
     
     it("should fail with empty password", async () => {
-        try {
-            await register.execute("test@test.com", "");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, "Value for field password is required.");
-        }
+        const registerResult = await register.execute("test@test.com", "");
+        expect(registerResult.getIsFailing()).to.be.true;
+        expect(registerResult.getMessage()).to.equal("Value for field password is required.");
     });
 
     it("should fail with invalid email", async () => {
-        try {
-            await register.execute("test.com", "Password123!");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, "Email address is invalid.");
-        }
+        const registerResult = await register.execute("test.com", "Password123!");
+        expect(registerResult.getIsFailing()).to.be.true;
+        expect(registerResult.getMessage()).to.equal("Email address is invalid.");
     });
     
     it("should fail with empty email", async () => {
-        try {
-            await register.execute("", "Password123!");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, "Value for field email is required.");
-        }
+        const registerResult = await register.execute("", "Password123!");
+        expect(registerResult.getIsFailing()).to.be.true;
+        expect(registerResult.getMessage()).to.equal("Value for field email is required.");
     });
     
     it("should fail with existing email", async () => {
-        const token = await register.execute("test@test.com", "Password123!");
-        should().exist(token);
+        let registerResult = await register.execute("test@test.com", "Password123!");
+        expect(registerResult.getIsSuccessful()).to.be.true;
 
-        try {
-            await register.execute("test@test.com", "Password456!");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, `Value "test@test.com" of field email is not unique.`);
-        }
+        registerResult = await register.execute("test@test.com", "Password456!");
+        expect(registerResult.getIsFailing()).to.be.true;
+        expect(registerResult.getMessage()).to.equal(`Value "test@test.com" of field email is not unique.`);
     });
 });

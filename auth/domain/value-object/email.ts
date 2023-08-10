@@ -1,3 +1,5 @@
+import { Result } from "@thuya/framework";
+
 /**
  * Entity class for emails.
  */
@@ -5,14 +7,31 @@ class Email {
     /**
      * Email value object.
      * 
-     * @param email the email
+     * @param email email address
      * @throws will throw an error if the email format is not valid
      */
-    constructor(private email: string) {
+    private constructor(private email: string) {
         if (!this.isEmailValid(email))
             throw new Error("Email address is invalid.");
     }
 
+
+
+    /**
+     * Create a new email.
+     * 
+     * @param email email address
+     * @returns result containing the new email instance
+     */
+    static create(email: string): Result<Email> {
+        try {
+            return Result.success(new Email(email));
+        }
+
+        catch (error: any) {
+            return Result.error(error.message);
+        }
+    }
 
 
     /**

@@ -1,7 +1,7 @@
 import User from "../../content/content-definition/types/user";
 import userContentDefinition from "../../content/content-definition/user-content-definition";
 import factory from "../factory";
-import { contentManager, Logger } from "@thuya/framework";
+import { contentManager, Logger, Result } from "@thuya/framework";
 
 /**
  * Use case to register a user.
@@ -24,7 +24,7 @@ class Register {
      * @param password password of the user
      * @returns a JWT token and the expiration date of it
      */
-    async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
+    async execute(email: string, password: string): Promise<Result<{ token: string, expiresInSeconds: number }>> {
         this.logger.debug("Start registration...");
 
         try {
@@ -37,7 +37,6 @@ class Register {
             if (createContentResult.getIsFailing())
                 throw new Error(createContentResult.getMessage());
     
-    
             const jwtService = factory.getJwtService();
             const token = jwtService.createToken({
                 email: email,
@@ -46,15 +45,15 @@ class Register {
     
             this.logger.debug("...Registration successful.");
 
-            return {
+            return Result.success({
                 token: token,
                 expiresInSeconds: jwtService.getExpiresInSeconds()
-            };
+            });
         }
 
-        catch (error) {
+        catch (error: any) {
             this.logger.debug("...Registration failed.");
-            throw error;
+            return Result.error(error.message);
         }
     }
 }

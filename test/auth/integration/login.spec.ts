@@ -1,7 +1,7 @@
 import { TextContentFieldDefinition, contentDefinitionManager, thuyaApp } from "@thuya/framework";
 import { authModule } from "../../../auth";
 import login from "../../../auth/domain/usecase/login";
-import { should } from "chai";
+import { expect } from "chai";
 import register from "../../../auth/domain/usecase/register";
 import { afterEach, beforeEach } from "mocha";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
@@ -19,66 +19,47 @@ describe("login tests", () => {
 
 
     it("should be successful with valid credentials", async () => {
-        let token = await register.execute("test@test.com", "password123!")
-        should().exist(token);
+        const registerResult = await register.execute("test@test.com", "password123!")
+        expect(registerResult.getIsSuccessful()).to.be.true;
         
-        token = await login.execute("test@test.com", "password123!");
-        should().exist(token);
+        const loginResult = await login.execute("test@test.com", "password123!");
+        expect(loginResult.getIsSuccessful()).to.be.true;
+        expect(loginResult.getResult()).to.exist;
     });
 
     it("should fail with invalid password", async () => {
-        const token = await register.execute("test@test.com", "password123!")
-        should().exist(token);
+        const registerResult = await register.execute("test@test.com", "password123!")
+        expect(registerResult.getIsSuccessful()).to.be.true;
         
-        try {
-            await login.execute("test@test.com", "password1234!");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, "Invalid login attempt.");
-        }
+        const loginResult = await login.execute("test@test.com", "password1234!");
+        expect(loginResult.getIsFailing()).to.be.true;
+        expect(loginResult.getMessage()).to.equal("Invalid login attempt.");
     });
     
     it("should fail with empty password", async () => {
-        const token = await register.execute("test@test.com", "password123!")
-        should().exist(token);
+        const registerResult = await register.execute("test@test.com", "password123!")
+        expect(registerResult.getIsSuccessful()).to.be.true;
         
-        try {
-            await login.execute("test@test.com", "");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, "Invalid login attempt.");
-        }
+        const loginResult = await login.execute("test@test.com", "");
+        expect(loginResult.getIsFailing()).to.be.true;
+        expect(loginResult.getMessage()).to.equal("Invalid login attempt.");
     });
 
     it("should fail with invalid email", async () => {
-        const token = await register.execute("test@test.com", "password123!")
-        should().exist(token);
+        const registerResult = await register.execute("test@test.com", "password123!")
+        expect(registerResult.getIsSuccessful()).to.be.true;
         
-        try {
-            await login.execute("test1@test.com", "password123!");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, "Invalid login attempt.");
-        }
+        const loginResult = await login.execute("test1@test.com", "password123!");
+        expect(loginResult.getIsFailing()).to.be.true;
+        expect(loginResult.getMessage()).to.equal("Invalid login attempt.");
     });
     
     it("should fail with empty email", async () => {
-        const token = await register.execute("test@test.com", "password123!")
-        should().exist(token);
+        const registerResult = await register.execute("test@test.com", "password123!")
+        expect(registerResult.getIsSuccessful()).to.be.true;
         
-        try {
-            await login.execute("", "password123!");
-            should().fail();
-        }
-        
-        catch (error: any) {
-            should().equal(error.message, "Invalid login attempt.");
-        }
+        const loginResult = await login.execute("", "password123!");
+        expect(loginResult.getIsFailing()).to.be.true;
+        expect(loginResult.getMessage()).to.equal("Invalid login attempt.");
     });
 });

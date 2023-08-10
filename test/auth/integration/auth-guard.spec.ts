@@ -3,7 +3,7 @@ import { authModule, roleAssignmentContentDefinition } from "../../../auth";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
 import guardUrl from "../../../auth/domain/usecase/guard-url";
 import register from "../../../auth/domain/usecase/register";
-import { should } from "chai";
+import { expect, should } from "chai";
 import authRestrictionContentDefinition from "../../../auth/content/content-definition/auth-restriction-content-definition";
 import AuthRestriction from "../../../auth/content/content-definition/types/auth-restriction";
 import RoleAssignment from "../../../auth/content/content-definition/types/role";
@@ -22,58 +22,54 @@ describe("authorization guard", () => {
 
 
     it("should be successful unauthenticated without restriction", async () => {
-        await guardUrl.execute("", "test-content", "POST");
+        const guardUrlResult = await guardUrl.execute("", "test-content", "POST");
+        expect(guardUrlResult.getIsSuccessful()).to.be.true;
     });
     
     it("should be successful authenticated without restriction", async () => {
         const token = await registerUser();
-        await guardUrl.execute(token, "test-content", "POST");
+        const guardUrlResult = await guardUrl.execute(token, "test-content", "POST");
+        expect(guardUrlResult.getIsSuccessful()).to.be.true;
     });
     
     it("should be successful authenticated with restriction and proper roles", async () => {
         await registerUser();
         await createRestriction();
         await createRoleAssignment();
-
         const token = await loginUser();
-        await guardUrl.execute(token, "test-content", "POST");
+
+        const guardUrlResult = await guardUrl.execute(token, "test-content", "POST");
+        expect(guardUrlResult.getIsSuccessful()).to.be.true;
     });
     
     it("should be successful authenticated with restriction and proper roles from cache", async () => {
         await registerUser();
         await createRestriction();
         await createRoleAssignment();
-
         const token = await loginUser();
-        await guardUrl.execute(token, "test-content", "POST");
-        await guardUrl.execute(token, "test-content", "POST");
+
+        let guardUrlResult = await guardUrl.execute(token, "test-content", "POST");
+        expect(guardUrlResult.getIsSuccessful()).to.be.true;
+
+        guardUrlResult = await guardUrl.execute(token, "test-content", "POST");
+        expect(guardUrlResult.getIsSuccessful()).to.be.true;
     });
     
     it("should fail unauthenticated with restriction", async () => {
         await createRestriction();
 
-        try {
-            await guardUrl.execute("", "test-content", "POST");
-            should().fail();
-        }
-
-        catch (error: any) {
-            should().equal(error.message, "Token is empty.");
-        }
+        const guardUrlResult = await guardUrl.execute("", "test-content", "POST");
+        expect(guardUrlResult.getIsFailing()).to.be.true;
+        expect(guardUrlResult.getMessage()).to.equal("Token is empty.");
     });
     
     it("should fail authenticated with restriction and missing role", async () => {
         const token = await registerUser();
         await createRestriction();
 
-        try {
-            await guardUrl.execute(token, "test-content", "POST");
-            should().fail();
-        }
-
-        catch (error: any) {
-            should().equal(error.message, "Not authorized to access url.");
-        }
+        const guardUrlResult = await guardUrl.execute(token, "test-content", "POST");
+        expect(guardUrlResult.getIsFailing()).to.be.true;
+        expect(guardUrlResult.getMessage()).to.equal("Not authorized to access url.");
     });
 })
 
@@ -83,10 +79,10 @@ describe("authorization guard", () => {
  * @returns the JWT token
  */
 async function loginUser(): Promise<string> {
-    const loginData = await login.execute("test@test.com", "Password123!");
-    should().exist(loginData);
+    const loginResult = await login.execute("test@test.com", "Password123!");
+    expect(loginResult.getIsSuccessful()).to.be.true;
     
-    return loginData.token;
+    return loginResult.getResult()!.token;
 }
 
 /**
@@ -120,8 +116,8 @@ async function createRestriction(): Promise<void> {
  * @returns 
  */
 async function registerUser(): Promise<string> {
-    const registerData = await register.execute("test@test.com", "Password123!");
-    should().exist(registerData);
+    const registerResult = await register.execute("test@test.com", "Password123!");
+    expect(registerResult.getIsSuccessful()).to.be.true;
     
-    return registerData.token;
+    return registerResult.getResult()!.token;
 }

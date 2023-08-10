@@ -6,7 +6,7 @@ import { Logger } from '@thuya/framework';
  * Service handling JWT requests.
  */
 class JwtService implements IJwtService {
-    private hashString = "cc27fed5-6368-44fc-97ac-bff0425d98f0";
+    private hashString;
     private expiresInSeconds = 3600;
     private logger: Logger;
 
@@ -14,6 +14,13 @@ class JwtService implements IJwtService {
 
     constructor() {
         this.logger = Logger.for(JwtService.name);
+
+        if (process.env.AUTH_TOKEN_HASH_STRING) {
+            this.hashString = process.env.AUTH_TOKEN_HASH_STRING;
+        } else {
+            this.logger.info("Using dummy token. It should not be used in production.");
+            this.hashString = "dummy-hash-token";
+        }
     }
 
 

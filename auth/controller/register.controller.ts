@@ -28,9 +28,12 @@ class RegisterController implements IController {
 
     private async register(request: Request, response: Response): Promise<void> {
         try {
-            const registerData = await register.execute(request.body.email, request.body.password);
+            const registerResult = await register.execute(request.body.email, request.body.password);
+            if (registerResult.getIsFailing()) {
+                throw new Error(registerResult.getMessage());
+            }
 
-            response.json(registerData).status(200);
+            response.json(registerResult.getResult()).status(200);
         }
 
         catch (error: any) {

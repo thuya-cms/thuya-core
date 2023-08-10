@@ -19,7 +19,10 @@ class EmailContentFieldDefinition extends TextContentFieldDefinition {
     
     private validateFormat(contentFieldData: string): Result {
         try {
-            new Email(contentFieldData.toString());
+            const emailResult = Email.create(contentFieldData.toString());
+            if (emailResult.getIsFailing()) {
+                return Result.error(emailResult.getMessage());
+            }
 
             return Result.success();
         }
