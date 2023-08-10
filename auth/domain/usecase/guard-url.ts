@@ -33,37 +33,41 @@ class GuardUrl {
         try {
             const superadminEmail: string | undefined = process.env.SUPER_ADMIN_EMAIL;
 
-            const authRestriction = await this.readRestriction(contentName, operation);
+            const authRestrictions = await this.listRestrictions(contentName, operation);
 
-            if (!authRestriction || !authRestriction.operations || !authRestriction.operations.includes(operation)) {
+            if (authRestrictions.length === 0) {
                 this.logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
                 this.logger.debug("...Guarding request successful.");
                 return Result.success();
             }
-            
-            const payload = factory.getJwtService().verifyToken(token);
-            
-            if (superadminEmail && superadminEmail === payload.email) {
-                this.logger.debug("Superadmin access.");
-                this.logger.debug("...Guarding request successful.");
-                return Result.success();
-            }
 
-            if (authRestriction.authorizedRoles && authRestriction.authorizedRoles.length > 0) {
-                let hasRole = false;
-                for (const requiredRole of authRestriction.authorizedRoles) {
-                    if (payload.roles.includes(requiredRole)) {
-                        hasRole = true;
-                        break;
+            for (const authRestriction of authRestrictions) {
+                if (!authRestriction.operations || !authRestriction.operations.includes(operation)) {
+                    continue;
+                }
+                
+                const payload = factory.getJwtService().verifyToken(token);
+                
+                if (superadminEmail && superadminEmail === payload.email) {
+                    continue;
+                }
+    
+                if (authRestriction.authorizedRoles && authRestriction.authorizedRoles.length > 0) {
+                    let hasRole = false;
+                    for (const requiredRole of authRestriction.authorizedRoles) {
+                        if (payload.roles.includes(requiredRole)) {
+                            hasRole = true;
+                            break;
+                        }
+                    }
+    
+                    if (!hasRole) {
+                        this.logger.debug(`Not authorized to access url.`);
+                        return Result.error(`Not authorized to access url.`);
                     }
                 }
-
-                if (!hasRole) {
-                    this.logger.debug(`Not authorized to access url.`);
-                    return Result.error(`Not authorized to access url.`);
-                }
             }
-
+            
             this.logger.debug("User has the required authorization.");
             this.logger.debug("...Guarding request successful.");
             return Result.success();
@@ -76,36 +80,42 @@ class GuardUrl {
     }
 
 
-    private async readRestriction(contentName: string, operation: string): Promise<AuthRestriction | undefined> {
-        let authRestriction: AuthRestriction;
-        const cacheEntry = restrictionCache.get(contentName);
+    private async listRestrictions(contentName: string, operation: string): Promise<AuthRestriction[]> {
+        let authRestrictions: AuthRestriction[] = [];
+        const cacheEntries = restrictionCache.list(contentName);
 
-        if (cacheEntry) {
+        if (cacheEntries) {
             this.logger.debug("Restriction found in cache.");
-            authRestriction = cacheEntry;
+            authRestrictions = cacheEntries;
         } else {
             this.logger.debug("Restriction is not in the cache.");
 
-            const readAuthRestrictionResult = await contentManager.readContentByFieldValue(
+            const listAuthRestrictionResult = await contentManager.listContentByFieldValue(
                 authRestrictionContentDefinition.getName(),
                 { name: "contentDefinitionName", value: contentName });
-    
-            if (readAuthRestrictionResult.getIsFailing()) {
+            if (listAuthRestrictionResult.getIsFailing()) {
                 this.logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
-                return undefined;
+                return [];
             }
 
-            authRestriction = readAuthRestrictionResult.getResult();
-            restrictionCache.set(authRestriction);
+            const authRestrictionList = listAuthRestrictionResult.getResult();
+            if (!authRestrictionList) {
+                return [];
+            }
+
+            for (const authRestriction of authRestrictionList) {
+                authRestrictions.push(authRestriction);
+            } 
+
+            restrictionCache.set(contentName, authRestrictionList);
         }
 
         this.logger.debug(
-            `Authorization restriction exists for "%s", operations "%s", roles "%s".`, 
-            authRestriction.contentDefinitionName, 
-            authRestriction.operations, 
-            authRestriction.authorizedRoles);
+            `Authorization restriction exists for "%s", operations "%s".`, 
+            contentName, 
+            operation);
 
-        return authRestriction;
+        return authRestrictions;
     }
 }
 

@@ -7,7 +7,7 @@ class RestrictionCache {
     private cache: {
         updatedAt: Date,
         contentDefinitionName: string,
-        restriction: AuthRestriction
+        restrictions: AuthRestriction[]
     }[] = [];
     private ttlMinutes = 10; 
     
@@ -16,19 +16,20 @@ class RestrictionCache {
     /**
      * Set an authorization restriction in the cache.
      * 
-     * @param restriction the authorization restriction
+     * @param contentDefinitionName name of te content definition
+     * @param restrictions the authorization restrictions
      * @returns 
      */
-    set(restriction: AuthRestriction): { updatedAt: Date, contentDefinitionName: string, restriction: AuthRestriction } {
-        let existingCacheEntry = this.cache.find(cacheEntry => cacheEntry.contentDefinitionName === restriction.contentDefinitionName);
+    set(contentDefinitionName: string, restrictions: AuthRestriction[]): { updatedAt: Date, contentDefinitionName: string, restrictions: AuthRestriction[] } {
+        let existingCacheEntry = this.cache.find(cacheEntry => cacheEntry.contentDefinitionName === contentDefinitionName);
         
         if (existingCacheEntry) {
             existingCacheEntry.updatedAt = new Date();
         } else {
             existingCacheEntry = {
                 updatedAt: new Date(),
-                contentDefinitionName: restriction.contentDefinitionName,
-                restriction: restriction
+                contentDefinitionName: contentDefinitionName,
+                restrictions: restrictions
             };
 
             this.cache.push(existingCacheEntry);
@@ -38,14 +39,13 @@ class RestrictionCache {
     }
 
     /**
-     * Get a restriction from the cache.
+     * List restrictions from the cache.
      * 
      * @param restrictionName the target content definition name of the authorization restriction
-     * @returns the authorization restriction or undefined
+     * @returns the authorization restrictions or undefined
      */
-    get(restrictionName: string): AuthRestriction | undefined {
+    list(restrictionName: string): AuthRestriction[] | undefined {
         const existingCacheEntryIndex = this.cache.findIndex(cacheEntry => cacheEntry.contentDefinitionName === restrictionName);
-
         if (existingCacheEntryIndex === -1) {
             return undefined;
         } 
@@ -59,7 +59,14 @@ class RestrictionCache {
             return undefined;
         }
 
-        return existingCacheEntry.restriction;
+        return existingCacheEntry.restrictions;
+    }
+
+    /**
+     * Clear the cache.
+     */
+    clear(): void {
+        this.cache = [];
     }
 }
 
