@@ -20,7 +20,10 @@ class PasswordContentFieldDefinition extends TextContentFieldDefinition {
     
     private validateFormat(contentFieldData: string): Result {
         try {
-            new Password(contentFieldData.toString());
+            const passwordResult = Password.create(contentFieldData.toString());
+            if (passwordResult.getIsFailing()) {
+                return Result.error(passwordResult.getMessage());
+            }
 
             return Result.success();
         }
@@ -31,8 +34,9 @@ class PasswordContentFieldDefinition extends TextContentFieldDefinition {
     }
     
     private hashPassword(contentFieldData: string): string {
-        const password = new Password(contentFieldData.toString());
-        return password.value();
+        const passwordResult = Password.create(contentFieldData.toString());
+        
+        return passwordResult.getResult()!.value();
     }
 }
 

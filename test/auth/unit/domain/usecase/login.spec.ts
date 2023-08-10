@@ -21,50 +21,35 @@ describe("login unit tests", () => {
 
 
     it("should fail with not existing user", async () => {
-        try {
-            sinon.stub(contentManager, "readContentByFieldValue").returns(Promise.resolve(Result.error("Not existing email")));
-            
-            await login.execute("dummy@dummy.com", "DummyPass1234!");
-            expect.fail();
-        }
-
-        catch (error: any) {
-            expect(error.message).to.equal("Invalid login attempt.");
-        }
+        sinon.stub(contentManager, "readContentByFieldValue").returns(Promise.resolve(Result.error("Not existing email")));
+        
+        const loginResult = await login.execute("dummy@dummy.com", "DummyPass1234!");
+        expect(loginResult.getIsFailing()).to.be.true;
+        expect(loginResult.getMessage()).to.equal("Invalid login attempt.");
     });
     
     it("should fail with invalid password", async () => {
-        try {
-            sinon
-                .stub(contentManager, "readContentByFieldValue")
-                .returns(Promise.resolve(Result.success({
-                    password: new Password("OtherPass1234!").value()
-                })));
-    
-            await login.execute("dummy@dummy.com", "DummyPass1234!");
-            expect.fail();
-        }
+        sinon
+            .stub(contentManager, "readContentByFieldValue")
+            .returns(Promise.resolve(Result.success({
+                password: Password.create("OtherPass1234!").getResult()!.value()
+            })));
 
-        catch (error: any) {
-            expect(error.message).to.equal("Invalid login attempt.");
-        }
+        const loginResult = await login.execute("dummy@dummy.com", "DummyPass1234!");
+        expect(loginResult.getIsFailing()).to.be.true;
+        expect(loginResult.getMessage()).to.equal("Invalid login attempt.");
     });
     
     it("should fail with empty password", async () => {
-        try {
-            sinon
-                .stub(contentManager, "readContentByFieldValue")
-                .returns(Promise.resolve(Result.success({
-                    password: new Password("OtherPass1234!").value()
-                })));
-    
-            await login.execute("dummy@dummy.com", "");
-            expect.fail();
-        }
+        sinon
+            .stub(contentManager, "readContentByFieldValue")
+            .returns(Promise.resolve(Result.success({
+                password: Password.create("OtherPass1234!").getResult()!.value()
+            })));
 
-        catch (error: any) {
-            expect(error.message).to.equal("Invalid login attempt.");
-        }
+        const loginResult = await login.execute("dummy@dummy.com", "");
+        expect(loginResult.getIsFailing()).to.be.true;
+        expect(loginResult.getMessage()).to.equal("Invalid login attempt.");
     });
 
     it("should be successful with valid credentials", async () => {
@@ -72,7 +57,7 @@ describe("login unit tests", () => {
             .stub(contentManager, "readContentByFieldValue")
             .withArgs(userContentDefinition.getName())
             .returns(Promise.resolve(Result.success({
-                password: new Password("DummyPass1234!").value()
+                password: Password.create("DummyPass1234!").getResult()!.value()
             })))
             
             .withArgs(roleAssignmentContentDefinition.getName())
@@ -80,9 +65,9 @@ describe("login unit tests", () => {
 
         const createTokenStub = sinon.stub(factory.getJwtService(), "createToken").returns("token1");
     
-        const loginData = await login.execute("dummy@dummy.com", "DummyPass1234!");
-
-        expect(loginData.token).to.equal("token1");
+        const loginResult = await login.execute("dummy@dummy.com", "DummyPass1234!");
+        expect(loginResult.getIsSuccessful()).to.be.true;    
+        expect(loginResult.getResult()!.token).to.equal("token1");
         expect(createTokenStub).to.have.been.calledWith({
             email: "dummy@dummy.com",
             roles: []
@@ -94,7 +79,7 @@ describe("login unit tests", () => {
             .stub(contentManager, "readContentByFieldValue")
             .withArgs(userContentDefinition.getName())
             .returns(Promise.resolve(Result.success({
-                password: new Password("DummyPass1234!").value()
+                password: Password.create("DummyPass1234!").getResult()!.value()
             })))
 
             .withArgs(roleAssignmentContentDefinition.getName())
@@ -104,9 +89,9 @@ describe("login unit tests", () => {
 
         const createTokenStub = sinon.stub(factory.getJwtService(), "createToken").returns("token1");
     
-        const loginData = await login.execute("dummy@dummy.com", "DummyPass1234!");
-
-        expect(loginData.token).to.equal("token1");
+        const loginResult = await login.execute("dummy@dummy.com", "DummyPass1234!");
+        expect(loginResult.getIsSuccessful()).to.be.true;
+        expect(loginResult.getResult()!.token).to.equal("token1");
         expect(createTokenStub).to.have.been.calledWith({
             email: "dummy@dummy.com",
             roles: ["admin"]

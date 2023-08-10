@@ -1,6 +1,6 @@
 import userContentDefinition from "../../content/content-definition/user-content-definition";
 import Password from "../value-object/password";
-import { contentManager, Logger } from "@thuya/framework";
+import { contentManager, Logger, Result } from "@thuya/framework";
 import factory from "../factory";
 import roleAssignmentContentDefinition from "../../content/content-definition/role-assignment-content-definition";
 import User from "../../content/content-definition/types/user";
@@ -26,12 +26,22 @@ class Login {
      * @param password password of the user
      * @returns a JWT token and the expiration date of it
      */
-    async execute(email: string, password: string): Promise<{ token: string, expiresInSeconds: number }> {
+    async execute(email: string, password: string): Promise<Result<{ token: string, expiresInSeconds: number }>> {
         this.logger.debug("Start login...");
 
         try {
-            const readUserContent = await this.readUserContent(email);
-            this.validatePassword(readUserContent, password, email);
+            const readUserContentResult = await this.readUserContent(email);
+            if (readUserContentResult.getIsFailing()) {
+                return Result.error(readUserContentResult.getMessage());
+            }
+
+            const readUserContent = readUserContentResult.getResult()!;
+
+            const validatePasswordResult = this.validatePassword(readUserContent, password, email);
+            if (validatePasswordResult.getIsFailing()) {
+                return Result.error(validatePasswordResult.getMessage());
+            }
+
             const roles = await this.readRoles(email);
     
             const jwtService = factory.getJwtService();
@@ -42,20 +52,20 @@ class Login {
     
             this.logger.debug("...Login successful.");
     
-            return {
+            return Result.success({
                 token: token,
                 expiresInSeconds: jwtService.getExpiresInSeconds()
-            };
+            });
         }
 
-        catch (error) {
+        catch (error: any) {
             this.logger.debug("...Login failed.");
-            throw error;
+            return Result.error(error.message);
         }
     }
 
 
-    private async readUserContent(email: string): Promise<User> {
+    private async readUserContent(email: string): Promise<Result<User>> {
         const readUserContentResult = await contentManager.readContentByFieldValue(userContentDefinition.getName(), {
             name: "email",
             value: email
@@ -63,21 +73,28 @@ class Login {
 
         if (readUserContentResult.getIsFailing()) {
             this.logger.error(`User "%s" does not exist.`, email);
-            throw new Error("Invalid login attempt.");
+            return Result.error("Invalid login attempt.");
         }
 
-        return readUserContentResult.getResult()!;
+        return Result.success(readUserContentResult.getResult()!);
     }
 
-    private validatePassword(readUserContent: any, password: string, email: string): void {
-        const storedPassword = new Password(readUserContent.password, true);
+    private validatePassword(readUserContent: any, password: string, email: string): Result {
+        const storedPasswordResult = Password.create(readUserContent.password, true);
+        if (storedPasswordResult.getIsFailing()) {
+            return Result.error("Stored password is not valid.");
+        }
+
+        const storedPassword = storedPasswordResult.getResult()!;
         const isPasswordMatching = storedPassword.compare(password);
 
         if (!isPasswordMatching) {
             this.logger.debug(`Invalid password for user "%s".`, email);
             this.logger.error("Invalid password.");
-            throw new Error("Invalid login attempt.");
+            return Result.error("Invalid login attempt.");
         }
+
+        return Result.success();
     }
 
     private async readRoles(email: string): Promise<string[]> {
@@ -85,7 +102,7 @@ class Login {
             name: "email",
             value: email
         });
-
+        
         if (readRoleResult.getIsFailing())
             return [];
         

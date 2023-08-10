@@ -1,4 +1,4 @@
-import { Logger, contentManager } from "@thuya/framework";
+import { Logger, Result, contentManager } from "@thuya/framework";
 import factory from "../factory";
 import authRestrictionContentDefinition from "../../content/content-definition/auth-restriction-content-definition";
 import AuthRestriction from "../../content/content-definition/types/auth-restriction";
@@ -24,9 +24,10 @@ class GuardUrl {
      * @param token the JWT token of the session
      * @param contentName name of the requested content definition
      * @param operation executed operation
+     * @returns result
      * @async
      */
-    async execute(token: string, contentName: string, operation: string): Promise<void> {
+    async execute(token: string, contentName: string, operation: string): Promise<Result> {
         this.logger.debug(`Guarding request for content "%s", operation "%s"...`, contentName, operation);
         
         try {
@@ -37,7 +38,7 @@ class GuardUrl {
             if (!authRestriction || !authRestriction.operations || !authRestriction.operations.includes(operation)) {
                 this.logger.debug(`No restriction for type "%s" operation "%s".`, contentName, operation);
                 this.logger.debug("...Guarding request successful.");
-                return;
+                return Result.success();
             }
             
             const payload = factory.getJwtService().verifyToken(token);
@@ -45,7 +46,7 @@ class GuardUrl {
             if (superadminEmail && superadminEmail === payload.email) {
                 this.logger.debug("Superadmin access.");
                 this.logger.debug("...Guarding request successful.");
-                return;
+                return Result.success();
             }
 
             if (authRestriction.authorizedRoles && authRestriction.authorizedRoles.length > 0) {
@@ -58,17 +59,19 @@ class GuardUrl {
                 }
 
                 if (!hasRole) {
-                    throw new Error("Not authorized to access url.");
+                    this.logger.debug(`Not authorized to access url.`);
+                    return Result.error(`Not authorized to access url.`);
                 }
             }
 
             this.logger.debug("User has the required authorization.");
             this.logger.debug("...Guarding request successful.");
+            return Result.success();
         }
 
         catch (error: any) {
             this.logger.debug("...Guarding request failed.");
-            throw error;
+            return Result.error(error.message);
         }
     }
 

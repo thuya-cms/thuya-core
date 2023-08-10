@@ -28,9 +28,12 @@ class LoginController implements IController {
 
     private async login(request: Request, response: Response): Promise<void> {
         try {
-            const loginData = await login.execute(request.body.email, request.body.password);
-    
-            response.json(loginData).status(200);
+            const loginResult = await login.execute(request.body.email, request.body.password);
+            if (loginResult.getIsFailing()) {
+                throw new Error(loginResult.getMessage());
+            }
+
+            response.json(loginResult.getResult()).status(200);
         }
     
         catch (error: any) {

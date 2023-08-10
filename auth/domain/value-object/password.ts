@@ -1,3 +1,4 @@
+import { Result } from '@thuya/framework';
 import bcrypt from 'bcrypt';
 
 /**
@@ -15,7 +16,7 @@ class Password {
      * @param isHashed true if the password is already hashed
      * @throws will throw an error when the password format is not correct
      */
-    constructor(password: string, isHashed = false) {
+    private constructor(password: string, isHashed = false) {
         if (!isHashed && !this.isPasswordValid(password))
             throw new Error("Password format is invalid.");
 
@@ -26,6 +27,23 @@ class Password {
     }
 
  
+
+    /**
+     * Create a new password.
+     * 
+     * @param password the password in hashed or not hashed format
+     * @param isHashed true if the password is already hashed
+     * @returns result containing the new password instance
+     */
+    static create(password: string, isHashed = false): Result<Password> {
+        try {
+            return Result.success(new Password(password, isHashed));
+        }
+
+        catch (error: any) {
+            return Result.error(error.message);
+        }
+    }
 
     /**
      * Create an empty password.
