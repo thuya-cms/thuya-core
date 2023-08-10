@@ -3,11 +3,12 @@ import { authModule, roleAssignmentContentDefinition } from "../../../auth";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
 import guardUrl from "../../../auth/domain/usecase/guard-url";
 import register from "../../../auth/domain/usecase/register";
-import { expect, should } from "chai";
+import { expect } from "chai";
 import authRestrictionContentDefinition from "../../../auth/content/content-definition/auth-restriction-content-definition";
 import AuthRestriction from "../../../auth/content/content-definition/types/auth-restriction";
 import RoleAssignment from "../../../auth/content/content-definition/types/role";
 import login from "../../../auth/domain/usecase/login";
+import restrictionCache from "../../../auth/service/restriction-cache";
 
 describe("authorization guard", () => {
     beforeEach(async () => {
@@ -15,8 +16,9 @@ describe("authorization guard", () => {
         await thuyaApp.initialize();
         await thuyaApp.useModule(authModule);
     });
-
+    
     afterEach(() => {
+        restrictionCache.clear();
         localPersistency.clear();
     });
 
@@ -39,7 +41,28 @@ describe("authorization guard", () => {
         const token = await loginUser();
 
         const guardUrlResult = await guardUrl.execute(token, "test-content", "POST");
+        expect(guardUrlResult.getIsSuccessful(), guardUrlResult.getMessage()).to.be.true;
+    });
+    
+    it("should be successful authenticated with restrictions and proper roles", async () => {
+        await registerUser();
+        await createRestrictions();
+        await createRoleAssignments();
+        const token = await loginUser();
+
+        const guardUrlResult = await guardUrl.execute(token, "test-content", "POST");
         expect(guardUrlResult.getIsSuccessful()).to.be.true;
+    });
+
+    it("should be successful authenticated with restrictions and a missing role", async () => {
+        await registerUser();
+        await createRestrictions();
+        await createRoleAssignment();
+        const token = await loginUser();
+
+        const guardUrlResult = await guardUrl.execute(token, "test-content", "POST");
+        expect(guardUrlResult.getIsFailing()).to.be.true;
+        expect(guardUrlResult.getMessage()).to.equal("Not authorized to access url.");
     });
     
     it("should be successful authenticated with restriction and proper roles from cache", async () => {
@@ -94,7 +117,7 @@ async function createRoleAssignment(): Promise<void> {
         roles: ["admin"]
     };
     const createRoleResult = await contentManager.createContent(roleAssignmentContentDefinition.getName(), role);
-    should().equal(createRoleResult.getIsSuccessful(), true, createRoleResult.getMessage());
+    expect(createRoleResult.getIsSuccessful()).to.be.true;
 }
 
 /**
@@ -107,7 +130,40 @@ async function createRestriction(): Promise<void> {
         authorizedRoles: ["admin"]
     };
     const createRestrictionResult = await contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
-    should().equal(createRestrictionResult.getIsSuccessful(), true, createRestrictionResult.getMessage());
+    expect(createRestrictionResult.getIsSuccessful()).to.be.true;
+}
+
+/**
+ * Create restrictions for test content.
+ */
+async function createRestrictions(): Promise<void> {
+    let authRestriction: AuthRestriction = {
+        contentDefinitionName: "test-content",
+        operations: ["POST"],
+        authorizedRoles: ["admin", "admin-2"]
+    };
+    let createRestrictionResult = await contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
+    expect(createRestrictionResult.getIsSuccessful()).to.be.true;
+    
+    authRestriction = {
+        contentDefinitionName: "test-content",
+        operations: ["POST"],
+        authorizedRoles: ["admin-3"]
+    };
+    createRestrictionResult = await contentManager.createContent(authRestrictionContentDefinition.getName(), authRestriction);
+    expect(createRestrictionResult.getIsSuccessful()).to.be.true;
+}
+
+/**
+ * Create role assignments for the admin role and test user.
+ */
+async function createRoleAssignments(): Promise<void> {
+    const role: RoleAssignment = {
+        email: "test@test.com",
+        roles: ["admin", "admin-3"]
+    };
+    const createRoleResult = await contentManager.createContent(roleAssignmentContentDefinition.getName(), role);
+    expect(createRoleResult.getIsSuccessful()).to.be.true;
 }
 
 /**
