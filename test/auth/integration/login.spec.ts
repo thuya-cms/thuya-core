@@ -1,7 +1,7 @@
 import { TextContentFieldDefinition, contentDefinitionManager, thuyaApp } from "@thuya/framework";
 import { authModule } from "../../../auth";
 import login from "../../../auth/domain/usecase/login";
-import { expect, should } from "chai";
+import { expect } from "chai";
 import register from "../../../auth/domain/usecase/register";
 import { afterEach, beforeEach } from "mocha";
 import localPersistency from "@thuya/framework/dist/content-management/persistency/local-content-management-persistency";
