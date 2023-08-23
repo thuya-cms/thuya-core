@@ -11,8 +11,10 @@ class MailerService {
      * @param to the target of the email
      * @param subject the subject of the email
      * @param body the content of the email
+     * @async
      */
-    sendMail(from: string, to: string[], subject: string, body: string): void {
+    async sendMail(from: string, to: string[], subject: string, body: string): Promise<void> {
+        await sendMail.init();
         sendMail.execute(from, to, subject, body);
     }
 }

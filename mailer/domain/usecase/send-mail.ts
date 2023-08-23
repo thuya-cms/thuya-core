@@ -11,7 +11,7 @@ class SendMail {
     
     
 
-    private constructor() {
+    constructor() {
         this.logger = Logger.for(SendMail.name);
     }
 
@@ -22,12 +22,10 @@ class SendMail {
      * 
      * @returns the new instance
      */
-    static async create(): Promise<SendMail> {
-        const sendMailInstance = new SendMail();
-        
+    async init(): Promise<void> {
         if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
             const account = await nodemailer.createTestAccount();
-            sendMailInstance.transporter = nodemailer.createTransport({
+            this.transporter = nodemailer.createTransport({
                 host: account.smtp.host,
                 port: account.smtp.port,
                 secure: account.smtp.secure,
@@ -37,7 +35,7 @@ class SendMail {
                 }
             });
         } else {
-            sendMailInstance.transporter = nodemailer.createTransport({
+            this.transporter = nodemailer.createTransport({
                 host: process.env.SMTP_HOST,
                 port: Number(process.env.SMTP_PORT),
                 auth: {
@@ -46,10 +44,7 @@ class SendMail {
                 }
             });
         }
-
-        return sendMailInstance;
     }
-
     
     /**
      * Execute sending an email.
@@ -77,4 +72,4 @@ class SendMail {
     }
 }
 
-export default await SendMail.create();
+export default new SendMail();
