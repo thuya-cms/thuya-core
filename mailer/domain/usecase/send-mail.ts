@@ -55,11 +55,11 @@ class SendMail {
      * Execute sending an email.
      * 
      * @param from the sender of the email
-     * @param to the target of the email
+     * @param to the targets of the email
      * @param subject the subject of the email
      * @param body the content of the email
      */
-    execute(from: string, to: string, subject: string, body: string): void {
+    execute(from: string, to: string[], subject: string, body: string): void {
         this.transporter.sendMail({
             from: from,
             to: to,

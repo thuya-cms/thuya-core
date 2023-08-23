@@ -12,7 +12,7 @@ class MailerService {
      * @param subject the subject of the email
      * @param body the content of the email
      */
-    sendMail(from: string, to: string, subject: string, body: string): void {
+    sendMail(from: string, to: string[], subject: string, body: string): void {
         sendMail.execute(from, to, subject, body);
     }
 }
