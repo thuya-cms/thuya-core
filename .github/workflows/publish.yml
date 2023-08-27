@@ -1,10 +1,10 @@
-name: Publish development version
+name: Publish new version
 
 on:
   workflow_dispatch:
 
 jobs:
-  validate:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: '18.x'
 
-      - name: Authenticate with private NPM package
+      - name: Authenticate with NPM
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: npm install, build
@@ -25,4 +25,4 @@ jobs:
       
       - name: npm publish development
         run: |
-          npm publish --tag development
+          npm publish
