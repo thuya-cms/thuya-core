@@ -2,9 +2,9 @@ import { Logger } from "@thuya/framework";
 import nodemailer from "nodemailer";
 
 /**
- * Use case to send an email.
+ * Use case to send an email with HTML  content.
  */
-class SendMail {
+class SendHTMLMail {
     private transporter!: nodemailer.Transporter;
     private logger: Logger;
 
@@ -12,7 +12,7 @@ class SendMail {
     
 
     constructor() {
-        this.logger = Logger.for(SendMail.name);
+        this.logger = Logger.for(SendHTMLMail.name);
     }
 
 
@@ -52,7 +52,7 @@ class SendMail {
      * @param from the sender of the email
      * @param to the targets of the email
      * @param subject the subject of the email
-     * @param body the text content of the email
+     * @param body HTML content of the email
      * @param options additional options
      * @param options.attachments attachments for the email
      */
@@ -61,7 +61,7 @@ class SendMail {
             from: from,
             to: to,
             subject: subject,
-            text: body,
+            html: body,
             attachments: options?.attachments || undefined
         }).then(info => {
             this.logger.info(`Email successfully sent to ${ to.join(",") }.`);
@@ -73,4 +73,4 @@ class SendMail {
     }
 }
 
-export default new SendMail();
+export default new SendHTMLMail();
